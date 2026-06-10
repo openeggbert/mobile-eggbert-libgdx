@@ -75,79 +75,51 @@ Java/LibGDX port of **Mobile Eggbert** (Speedy Blupi), originally a Windows Phon
 | `Pixmap.cs` | `Pixmap.java` | 571 | ✅ Done |
 | `InputPad.cs` | `InputPad.java` | 1,002 | ✅ Done |
 | `Game1.cs` | `Game1.java` | 1,008 | ✅ Done |
-| `Decor.cs` | `Decor.java` | **10,596** | ❌ **Missing** |
+| `Decor.cs` | `Decor.java` | **10,596** | ✅ Done |
 
 ### Progress by Lines of Code
-- **Ported**: ~7,800 lines of C# game logic (42%)
-- **Missing**: 10,596 lines (`Decor.cs`) (58%)
-- **By files**: 19 of 20 C# files complete (95%)
+- **Ported**: ~18,400 lines of C# game logic (100%)
+- **Missing**: nothing
+- **By files**: 20 of 20 C# files complete (100%)
 
 ---
 
-## What Remains ❌
+## What Remains ❌ / Known Issues
 
-### Decor.java — The Main Missing Piece
+### Runtime correctness (struct value semantics)
 
-`Decor.java` is the largest and most complex class (10,596 lines C# → estimated ~8,000–10,000 lines Java).
-It contains the **entire gameplay simulation**: tiles, physics, Blupi character AI, collision detection,
-move objects (enemies/platforms/items), sound triggers, cheat codes, save/load, world transitions.
+The most significant outstanding issue is **C# struct → Java class aliasing**.
 
-#### Key methods to port:
+In C#, `TinyPoint` and `TinyRect` are value types (`struct`) — assignment copies the value.
+In Java they are reference types — `TinyPoint p = other` just creates an alias, not a copy.
 
-| Method | C# lines | Complexity |
-|---|---|---|
-| Inner classes (`Cellule`, `MoveObject`, `ByeByeObject`) | ~70 | Low |
-| Fields (~80 fields) | ~250 | Low |
-| `Constructor`, `Create()`, `InitDecor()` | ~180 | Low |
-| `PlayPrepare()`, `BuildPrepare()` | ~80 | Low |
-| `Build()` — rendering loop | ~410 | Medium |
-| `DrawInfo()` | ~125 | Medium |
-| `SetSpeedX/Y()`, `KeyChange()` | ~20 | Low |
-| `SoundEnviron()`, `PlaySound()`, `StopSound()` | ~100 | Low |
-| `AdaptMotorVehicleSound()`, `PosSound()` | ~60 | Low |
-| `GetDim/SetDim`, `GetMission/SetMission`, etc. | ~50 | Low |
-| `InitializeDoors()`, `MemorizeDoors()` | ~10 | Low |
-| `GetCheatTinyText()` | ~30 | Low |
-| `CheatAction()` | ~270 | Medium |
-| `BlupiSearchIcon()` | ~315 | Medium |
-| `BlupiRect()`, `BlupiAdjust()`, `BlupiBloque()` | ~120 | Medium |
-| **`BlupiStep()`** | **~3,630** | **Very High** |
-| `BlupiDead()` | ~65 | Low |
-| `DecorDetect()` | ~80 | Medium |
-| `TestPath()` | ~90 | Medium |
-| `MoveObjectStep()`, `MoveObjectStepLine()`, `MoveObjectStepIcon()` | ~1,120 | High |
-| `AscenseurDetect()`, `AscenseurVertigo()`, etc. | ~150 | High |
-| Caisse (crate) helpers | ~250 | High |
-| Collision helpers (IsLave, IsPiege, IsBlitz, etc.) | ~300 | Medium |
-| Trajectory helpers (Balle/Move traj) | ~80 | Low |
-| ByeBye animation helpers | ~100 | Medium |
-| Voyage (life transition) helpers | ~200 | Medium |
-| Border helpers (`IsRightBorder`, `AdaptBorder`, etc.) | ~500 | High |
-| `CurrentRead()`, `CurrentWrite()` | ~300 | Low |
-| `Read()` | ~60 | Low |
-| `MainSwitchInitialize()`, `AdaptDoors()` | ~100 | Medium |
-| Door/Gold helpers | ~110 | Low |
+`Decor.java` has hundreds of such assignments that were not fixed by the automated port.
+These will not cause compile errors but will produce wrong gameplay behaviour (e.g. positions
+shared between objects that should be independent). Each must be changed to `.Copy()` when
+the original C# code intended a copy-by-value.
 
-#### Known translation challenges:
-- C# `struct` (value type) → Java `class` + `.Copy()` for every assignment
-- `m_decor[x, y]` → `m_decor[x][y]` (2D array syntax)
-- `ref T` parameters → direct mutation of Java objects (fields are public)
-- `out bool param` → `boolean[]` single-element array
-- `ref int param` → `int[]` single-element array
-- `Worlds.GetDecorField(...) ?? (-1)` → null-coalescing must use ternary
-- `m_random.Next(min, max)` → `m_random.nextInt(max - min) + min`
+### Porting issues fixed during initial run
 
-#### Porting strategy (recommended):
+The following issues were found and fixed to get the game running:
 
-**Option A — Write in chunks** (no env var needed):
-1. Write skeleton: inner classes + fields + all stub methods (~600 lines)
-2. Edit in method bodies group by group (~500 lines per Edit call)
+| Issue | Fix |
+|---|---|
+| 49 naming-convention errors (camelCase call sites) | Fixed in Game1, InputPad, Misc, Text, Pixmap |
+| Qualified enum cases in switch (`Def.ButtonGlyph.X`) — invalid in Java 11 | Removed qualifier |
+| C# struct fields (`TinyPoint`, `TinyRect`) were `null` at runtime | Added `= new TinyPoint()` / `= new TinyRect()` at declaration |
+| `Cellule[][]`, `MoveObject[]`, `TinyPoint[]` element nulls | Added `initCellule2D`, `initMoveObject`, `initTinyPoints` helpers |
+| C# format strings `{0}`, `{1}` not replaced by `%s` | Fixed in Decor.java |
+| `String.split(",")` drops trailing empty fields | Changed to `split(",", -1)` in Worlds.java |
+| `android/build.gradle` missing `natives` configuration | Added `configurations { natives }` |
 
-**Option B — Raise output limit**:
-```bash
-export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
-```
-Then write the complete file in one shot.
+### Next steps
+
+1. **Test gameplay** — start a level and verify Blupi moves, physics work, level completes
+2. **Fix struct aliasing** — audit all `TinyPoint`/`TinyRect` assignments in Decor.java,
+   add `.Copy()` wherever C# semantics required a value copy
+3. **Sound** — verify audio plays correctly via LibGDX backend
+4. **Save/load** — test `IsolatedStorageFile` save/load of game progress
+5. **Android** — build and test `android:assembleDebug` APK
 
 ---
 
