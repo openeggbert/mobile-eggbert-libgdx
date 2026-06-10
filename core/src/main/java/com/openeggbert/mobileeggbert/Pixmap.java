@@ -118,7 +118,7 @@ public class Pixmap {
                     rect.Left + rect.Width() / 2 - (int)originX,
                     rect.Top + 28
                 );
-                Text.DrawTextCenter(this, pos, Decor.getCheatTinyText(glyph), 1.0);
+                Text.DrawTextCenter(this, pos, Decor.GetCheatTinyText(glyph), 1.0);
                 break;
             }
             default: break;
