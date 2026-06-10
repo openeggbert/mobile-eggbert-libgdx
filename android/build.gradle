@@ -23,6 +23,10 @@ android {
     }
 }
 
+configurations {
+    natives
+}
+
 dependencies {
     implementation project(':core')
     api "com.badlogicgames.gdx:gdx-backend-android:1.12.1"

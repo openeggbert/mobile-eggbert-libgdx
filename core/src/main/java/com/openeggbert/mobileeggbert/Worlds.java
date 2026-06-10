@@ -181,8 +181,8 @@ public class Worlds {
         for (int i = 0; i < lines.length; i++) {
             if (lines[i].startsWith(section + ":")) {
                 String text = lines[i + 1 + x];
-                String[] parts = text.split(",");
-                if (parts[y] == null || parts[y].isEmpty()) return -1;
+                String[] parts = text.split(",", -1);
+                if (y >= parts.length || parts[y] == null || parts[y].isEmpty()) return -1;
                 try { return Integer.parseInt(parts[y]); }
                 catch (NumberFormatException e) { return null; }
             }

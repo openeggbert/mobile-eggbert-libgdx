@@ -11,6 +11,26 @@ import java.util.Random;
             public int icon;
         }
 
+        private static Cellule[][] initCellule2D(int w, int h) {
+            Cellule[][] arr = new Cellule[w][h];
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                    arr[i][j] = new Cellule();
+            return arr;
+        }
+
+        private static MoveObject[] initMoveObject(int n) {
+            MoveObject[] arr = new MoveObject[n];
+            for (int i = 0; i < n; i++) arr[i] = new MoveObject();
+            return arr;
+        }
+
+        private static TinyPoint[] initTinyPoints(int n) {
+            TinyPoint[] arr = new TinyPoint[n];
+            for (int i = 0; i < n; i++) arr[i] = new TinyPoint();
+            return arr;
+        }
+
         static class MoveObject
         {
             public int type;
@@ -23,11 +43,11 @@ import java.util.Random;
 
             public int timeStopEnd;
 
-            public TinyPoint posStart;
+            public TinyPoint posStart = new TinyPoint();
 
-            public TinyPoint posEnd;
+            public TinyPoint posEnd = new TinyPoint();
 
-            public TinyPoint posCurrent;
+            public TinyPoint posCurrent = new TinyPoint();
 
             public int step;
 
@@ -87,23 +107,23 @@ import java.util.Random;
 
         private GameData m_gameData;
 
-        private Cellule[][] m_decor = new Cellule[100][100];
+        private Cellule[][] m_decor = initCellule2D(100, 100);
 
-        private Cellule[][] m_bigDecor = new Cellule[100][100];
+        private Cellule[][] m_bigDecor = initCellule2D(100, 100);
 
         private int[] m_balleTraj = new int[1300];
 
         private int[] m_moveTraj = new int[1300];
 
-        private MoveObject[] m_moveObject = new MoveObject[MAXMOVEOBJECT];
+        private MoveObject[] m_moveObject = initMoveObject(MAXMOVEOBJECT);
 
         private int m_keyPress;
 
         private int m_lastKeyPress;
 
-        private TinyPoint m_posDecor;
+        private TinyPoint m_posDecor = new TinyPoint();
 
-        private TinyPoint m_dimDecor;
+        private TinyPoint m_dimDecor = new TinyPoint();
 
         private int m_term;
 
@@ -115,7 +135,7 @@ import java.util.Random;
 
         private boolean m_bPause;
 
-        private TinyRect m_drawBounds;
+        private TinyRect m_drawBounds = new TinyRect();
 
         private int m_nbRankCaisse;
 
@@ -125,11 +145,11 @@ import java.util.Random;
 
         private int[] m_linkCaisse = new int[MAXMOVEOBJECT];
 
-        private TinyPoint m_blupiPos;
+        private TinyPoint m_blupiPos = new TinyPoint();
 
-        private TinyPoint m_blupiLastPos;
+        private TinyPoint m_blupiLastPos = new TinyPoint();
 
-        private TinyPoint m_blupiValidPos;
+        private TinyPoint m_blupiValidPos = new TinyPoint();
 
         private int m_blupiAction;
 
@@ -147,7 +167,7 @@ import java.util.Random;
 
         private int m_blupiChannel;
 
-        private TinyPoint m_blupiVector;
+        private TinyPoint m_blupiVector = new TinyPoint();
 
         private int m_blupiTransport;
 
@@ -193,9 +213,9 @@ import java.util.Random;
 
         private int m_blupiMotorSound;
 
-        private TinyPoint m_blupiPosHelico;
+        private TinyPoint m_blupiPosHelico = new TinyPoint();
 
-        private TinyPoint m_blupiPosMagic;
+        private TinyPoint m_blupiPosMagic = new TinyPoint();
 
         private boolean m_blupiRestart;
 
@@ -225,9 +245,9 @@ import java.util.Random;
 
         private int m_blupiFifoNb;
 
-        private TinyPoint[] m_blupiFifoPos = new TinyPoint[10];
+        private TinyPoint[] m_blupiFifoPos = initTinyPoints(10);
 
-        private TinyPoint m_blupiStartPos;
+        private TinyPoint m_blupiStartPos = new TinyPoint();
 
         private int m_blupiStartDir;
 
@@ -269,7 +289,7 @@ import java.util.Random;
 
         private int m_detectIcon;
 
-        private TinyPoint m_sucettePos;
+        private TinyPoint m_sucettePos = new TinyPoint();
 
         private int m_sucetteType;
 
@@ -279,9 +299,9 @@ import java.util.Random;
 
         private int m_blupiOffsetY;
 
-        private TinyPoint m_scrollPoint;
+        private TinyPoint m_scrollPoint = new TinyPoint();
 
-        private TinyPoint m_scrollAdd;
+        private TinyPoint m_scrollAdd = new TinyPoint();
 
         private int m_voyageIcon;
 
@@ -291,9 +311,9 @@ import java.util.Random;
 
         private int m_voyageTotal;
 
-        private TinyPoint m_voyageStart;
+        private TinyPoint m_voyageStart = new TinyPoint();
 
-        private TinyPoint m_voyageEnd;
+        private TinyPoint m_voyageEnd = new TinyPoint();
 
         private int m_decorAction;
 
@@ -396,7 +416,7 @@ import java.util.Random;
 
         public boolean LoadImages()
         {
-            String name = String.format("decor{0}", String.format("%03d", m_region));
+            String name = String.format("decor%s", String.format("%03d", m_region));
             m_pixmap.BackgroundCache(name);
             return true;
         }
@@ -1164,7 +1184,7 @@ import java.util.Random;
                 pos.X = 0;
                 pos.Y = 438;
                 m_pixmap.HudIcon(4, 108, pos);
-                String text = String.format("= {0}", Integer.toString(m_blupiPerso));
+                String text = String.format("= %s", Integer.toString(m_blupiPerso));
                 pos.X = 32;
                 pos.Y = 452;
                 Text.DrawText(m_pixmap, pos, text, 0.7);
@@ -1202,7 +1222,7 @@ import java.util.Random;
                 tinyRect.Bottom = 480;
                 TinyRect rect = tinyRect;
                 m_pixmap.DrawIcon(14, 15, rect, 0.6, false);
-                String text = String.format("{0}/{1}", Integer.toString(m_nbTresor), Integer.toString(m_totalTresor));
+                String text = String.format("%s/%s", Integer.toString(m_nbTresor), Integer.toString(m_totalTresor));
                 pos.X = 460;
                 pos.Y = 450;
                 Text.DrawTextCenter(m_pixmap, pos, text, 1.0);
@@ -1588,23 +1608,23 @@ import java.util.Random;
         {
             switch (glyph)
             {
-                case Def.ButtonGlyph.Cheat1:
+                case Cheat1:
                     return "D";
-                case Def.ButtonGlyph.Cheat2:
+                case Cheat2:
                     return "B";
-                case Def.ButtonGlyph.Cheat3:
+                case Cheat3:
                     return "S";
-                case Def.ButtonGlyph.Cheat4:
+                case Cheat4:
                     return "E";
-                case Def.ButtonGlyph.Cheat5:
+                case Cheat5:
                     return "R";
-                case Def.ButtonGlyph.Cheat6:
+                case Cheat6:
                     return "T";
-                case Def.ButtonGlyph.Cheat7:
+                case Cheat7:
                     return "C";
-                case Def.ButtonGlyph.Cheat8:
+                case Cheat8:
                     return "T";
-                case Def.ButtonGlyph.Cheat9:
+                case Cheat9:
                     return "G";
                 default:
                     return "";
