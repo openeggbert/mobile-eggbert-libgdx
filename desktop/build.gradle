@@ -1,0 +1,22 @@
+apply plugin: 'java-library'
+apply plugin: 'application'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+mainClassName = 'com.openeggbert.mobileeggbert.desktop.DesktopLauncher'
+
+dependencies {
+    implementation project(':core')
+    api "com.badlogicgames.gdx:gdx-backend-lwjgl3:1.12.1"
+    api "com.badlogicgames.gdx:gdx-platform:1.12.1:natives-desktop"
+}
+
+jar {
+    archiveFileName = 'mobile-eggbert.jar'
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
