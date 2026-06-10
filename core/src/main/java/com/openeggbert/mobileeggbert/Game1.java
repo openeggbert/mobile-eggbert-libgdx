@@ -179,7 +179,7 @@ public class Game1 extends Game {
         }
 
         if (phase == Def.Phase.Play) {
-            decor.SetButtonPressed(buttonPressed);
+            decor.ButtonPressed = buttonPressed;
             decor.MoveStep();
             int result = decor.IsTerminated();
             if (result == -1) {
@@ -190,7 +190,7 @@ public class Game1 extends Game {
                 SetPhase(Def.Phase.Win);
             } else if (result >= 1) {
                 MemorizeGamerProgress();
-                startMission(result);
+                StartMission(result);
             }
         }
     }
@@ -203,7 +203,7 @@ public class Game1 extends Game {
     }
 
     private void StartMission(int mission) {
-        if (mission > 20 && mission % 10 > 1 && isTrialMode()) {
+        if (mission > 20 && mission % 10 > 1 && IsTrialMode()) {
             SetPhase(Def.Phase.Trial);
             return;
         }
@@ -223,7 +223,7 @@ public class Game1 extends Game {
 
     private void ContinueMission2() {
         SetPhase(Def.Phase.Play, -2);
-        mission = decor.Mission();
+        mission = decor.GetMission();
         if (mission != 1) gameData.SetLastWorld(mission / 10);
         decor.LoadImages();
         decor.StartSound();
@@ -260,13 +260,13 @@ public class Game1 extends Game {
                 DrawBackgroundFade();
                 if (fadeOutPhase == Def.Phase.None) {
                     DrawButtonsBackground();
-                    inputPad.draw();
+                    inputPad.Draw();
                     DrawButtonsText();
                 }
             }
         } else if (phase == Def.Phase.Play) {
             decor.Build();
-            inputPad.draw();
+            inputPad.Draw();
         }
         if (phase == Def.Phase.Wait) DrawWaitProgress();
     }
@@ -375,7 +375,7 @@ public class Game1 extends Game {
             TinyRect rect = new TinyRect(10, 260, height - 325, height - 10);
             pixmap.DrawIcon(14, 15, rect, 0.3, false);
             TinyRect rect2 = new TinyRect(width - 170, width - 10,
-                height - ((isTrialMode() || isRankingMode()) ? 325 : 195), height - 10);
+                height - ((IsTrialMode() || IsRankingMode()) ? 325 : 195), height - 10);
             pixmap.DrawIcon(14, 15, rect2, 0.3, false);
         }
     }
@@ -387,8 +387,8 @@ public class Game1 extends Game {
             DrawButtonGamerText(Def.ButtonGlyph.InitGamerC, 2);
             DrawTextUnderButton(Def.ButtonGlyph.InitPlay, MyResource.TX_BUTTON_PLAY);
             DrawTextRightButton(Def.ButtonGlyph.InitSetup, MyResource.TX_BUTTON_SETUP);
-            if (isTrialMode()) DrawTextUnderButton(Def.ButtonGlyph.InitBuy, MyResource.TX_BUTTON_BUY);
-            if (isRankingMode()) DrawTextUnderButton(Def.ButtonGlyph.InitRanking, MyResource.TX_BUTTON_RANKING);
+            if (IsTrialMode()) DrawTextUnderButton(Def.ButtonGlyph.InitBuy, MyResource.TX_BUTTON_BUY);
+            if (IsRankingMode()) DrawTextUnderButton(Def.ButtonGlyph.InitRanking, MyResource.TX_BUTTON_RANKING);
         }
         if (phase == Def.Phase.Pause) {
             DrawTextUnderButton(Def.ButtonGlyph.PauseMenu, MyResource.TX_BUTTON_MENU);
@@ -407,19 +407,19 @@ public class Game1 extends Game {
             DrawTextRightButton(Def.ButtonGlyph.SetupZoom, MyResource.TX_BUTTON_SETUP_ZOOM);
             DrawTextRightButton(Def.ButtonGlyph.SetupAccel, MyResource.TX_BUTTON_SETUP_ACCEL);
             if (phase == Def.Phase.MainSetup) {
-                String text = String.format(MyResource.loadString(MyResource.TX_BUTTON_SETUP_RESET),
+                String text = String.format(MyResource.LoadString(MyResource.TX_BUTTON_SETUP_RESET),
                     String.valueOf((char)(65 + gameData.SelectedGamer())));
                 DrawTextRightButton(Def.ButtonGlyph.SetupReset, text);
             }
         }
         if (phase == Def.Phase.Trial) {
             TinyPoint pos = new TinyPoint(360, 50);
-            Text.DrawText(pixmap, pos, MyResource.loadString(MyResource.TX_TRIAL1), 0.9);
-            pos.Y += 40; Text.DrawText(pixmap, pos, MyResource.loadString(MyResource.TX_TRIAL2), 0.7);
-            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.loadString(MyResource.TX_TRIAL3), 0.7);
-            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.loadString(MyResource.TX_TRIAL4), 0.7);
-            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.loadString(MyResource.TX_TRIAL5), 0.7);
-            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.loadString(MyResource.TX_TRIAL6), 0.7);
+            Text.DrawText(pixmap, pos, MyResource.LoadString(MyResource.TX_TRIAL1), 0.9);
+            pos.Y += 40; Text.DrawText(pixmap, pos, MyResource.LoadString(MyResource.TX_TRIAL2), 0.7);
+            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.LoadString(MyResource.TX_TRIAL3), 0.7);
+            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.LoadString(MyResource.TX_TRIAL4), 0.7);
+            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.LoadString(MyResource.TX_TRIAL5), 0.7);
+            pos.Y += 25; Text.DrawText(pixmap, pos, MyResource.LoadString(MyResource.TX_TRIAL6), 0.7);
             DrawTextUnderButton(Def.ButtonGlyph.TrialBuy, MyResource.TX_BUTTON_BUY);
             DrawTextUnderButton(Def.ButtonGlyph.TrialCancel, MyResource.TX_BUTTON_BACK);
         }
@@ -435,22 +435,22 @@ public class Game1 extends Game {
         TinyPoint pos = new TinyPoint(
             buttonRect.Right + 5 - pixmap.Origin().X,
             buttonRect.Top + 3 - pixmap.Origin().Y);
-        String text = String.format(MyResource.loadString(MyResource.TX_GAMER_TITLE),
+        String text = String.format(MyResource.LoadString(MyResource.TX_GAMER_TITLE),
             String.valueOf((char)(65 + gamer)));
         Text.DrawText(pixmap, pos, text, 0.7);
         pos = new TinyPoint(buttonRect.Right + 5 - pixmap.Origin().X, buttonRect.Top + 25 - pixmap.Origin().Y);
-        text = String.format(MyResource.loadString(MyResource.TX_GAMER_MDOORS), mainDoors[0]);
+        text = String.format(MyResource.LoadString(MyResource.TX_GAMER_MDOORS), mainDoors[0]);
         Text.DrawText(pixmap, pos, text, 0.45);
         pos = new TinyPoint(buttonRect.Right + 5 - pixmap.Origin().X, buttonRect.Top + 39 - pixmap.Origin().Y);
-        text = String.format(MyResource.loadString(MyResource.TX_GAMER_SDOORS), secondaryDoors[0]);
+        text = String.format(MyResource.LoadString(MyResource.TX_GAMER_SDOORS), secondaryDoors[0]);
         Text.DrawText(pixmap, pos, text, 0.45);
         pos = new TinyPoint(buttonRect.Right + 5 - pixmap.Origin().X, buttonRect.Top + 53 - pixmap.Origin().Y);
-        text = String.format(MyResource.loadString(MyResource.TX_GAMER_LIFES), nbVies[0]);
+        text = String.format(MyResource.LoadString(MyResource.TX_GAMER_LIFES), nbVies[0]);
         Text.DrawText(pixmap, pos, text, 0.45);
     }
 
     private void DrawTextRightButton(Def.ButtonGlyph glyph, int res) {
-        DrawTextRightButton(glyph, MyResource.loadString(res));
+        DrawTextRightButton(glyph, MyResource.LoadString(res));
     }
 
     private void DrawTextRightButton(Def.ButtonGlyph glyph, String text) {
@@ -476,7 +476,7 @@ public class Game1 extends Game {
         TinyPoint pos = new TinyPoint(
             (buttonRect.Left + buttonRect.Right) / 2 - pixmap.Origin().X,
             buttonRect.Bottom + 2 - pixmap.Origin().Y);
-        Text.DrawTextCenter(pixmap, pos, MyResource.loadString(res), 0.7);
+        Text.DrawTextCenter(pixmap, pos, MyResource.LoadString(res), 0.7);
     }
 
     private void DrawWaitProgress() {
@@ -545,12 +545,12 @@ public class Game1 extends Game {
             default: break;
         }
         if (this.phase == Def.Phase.Play && mission > 0) {
-            startMission(mission);
+            StartMission(mission);
         }
     }
 
     private void MemorizeGamerProgress() {
-        gameData.SetNbVies(decor.NbVies());
+        gameData.SetNbVies(decor.GetNbVies());
         decor.MemorizeDoors(gameData);
         gameData.Write();
     }

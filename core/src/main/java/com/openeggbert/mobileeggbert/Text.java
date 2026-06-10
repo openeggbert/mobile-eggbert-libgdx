@@ -174,14 +174,14 @@ public class Text {
     };
 
     public static void DrawTextLeft(Pixmap pixmap, TinyPoint pos, String text, double size) {
-        if (text != null && !text.isEmpty()) drawText(pixmap, pos, text, size);
+        if (text != null && !text.isEmpty()) DrawText(pixmap, pos, text, size);
     }
 
     public static void DrawText(Pixmap pixmap, TinyPoint pos, String text, double size) {
         if (text == null || text.isEmpty()) return;
         TinyPoint p = pos.Copy();
         for (char car : text.toCharArray()) {
-            drawChar(pixmap, p, car, size);
+            DrawChar(pixmap, p, car, size);
         }
     }
 
@@ -191,8 +191,8 @@ public class Text {
         int y = p.Y;
         int accumulatedWidth = 0;
         for (char c : text.toCharArray()) {
-            int charWidth = getCharWidth(c, size);
-            drawChar(pixmap, p, c, size);
+            int charWidth = GetCharWidth(c, size);
+            DrawChar(pixmap, p, c, size);
             accumulatedWidth += charWidth;
             p.Y = y + accumulatedWidth / pente;
         }
@@ -201,14 +201,14 @@ public class Text {
     public static void DrawTextCenter(Pixmap pixmap, TinyPoint pos, String text, double size) {
         if (text == null || text.isEmpty()) return;
         TinyPoint p = pos.Copy();
-        p.X = pos.X - getTextWidth(text, size) / 2;
-        drawText(pixmap, p, text, size);
+        p.X = pos.X - GetTextWidth(text, size) / 2;
+        DrawText(pixmap, p, text, size);
     }
 
     public static int GetTextWidth(String text, double size) {
         if (text == null || text.isEmpty()) return 0;
         int result = 0;
-        for (char c : text.toCharArray()) result += getCharWidth(c, size);
+        for (char c : text.toCharArray()) result += GetCharWidth(c, size);
         return result;
     }
 
@@ -224,13 +224,13 @@ public class Text {
         int num = (short) car * 6;
         int rank = table_char[num];
         TinyPoint pos2 = new TinyPoint(pos.X + table_char[num + 1], pos.Y + table_char[num + 2]);
-        drawCharSingle(pixmap, pos2, rank, size);
+        DrawCharSingle(pixmap, pos2, rank, size);
         rank = table_char[num + 3];
         if (rank != -1) {
             pos2 = new TinyPoint(pos.X + table_char[num + 4], pos.Y + table_char[num + 5]);
-            drawCharSingle(pixmap, pos2, rank, size);
+            DrawCharSingle(pixmap, pos2, rank, size);
         }
-        pos.X += getCharWidth(car, size);
+        pos.X += GetCharWidth(car, size);
     }
 
     private static int GetCharWidth(char c, double size) {

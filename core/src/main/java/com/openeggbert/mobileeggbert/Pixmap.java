@@ -160,7 +160,7 @@ public class Pixmap {
     }
 
     public boolean Start() {
-        graphics.GraphicsDevice().clear(Color.CornflowerBlue);
+        graphics.GraphicsDevice().Clear(Color.CornflowerBlue);
         return true;
     }
 
@@ -291,7 +291,7 @@ public class Pixmap {
         }
         spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
         spriteBatch.Draw(bitmap, dst, src,
-            Color.fromNonPremultiplied(255, 255, 255, (int)(255.0 * opacity)),
+            Color.FromNonPremultiplied(255, 255, 255, (int)(255.0 * opacity)),
             rotationRad, origin, effect, 0f);
         spriteBatch.End();
     }

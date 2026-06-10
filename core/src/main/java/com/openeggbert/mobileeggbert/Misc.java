@@ -6,14 +6,14 @@ public class Misc {
 
     public static Rectangle RotateAdjust(Rectangle rect, double angle) {
         TinyPoint center = new TinyPoint(rect.width / 2, rect.height / 2);
-        TinyPoint rotated = rotatePointRad(angle, center);
+        TinyPoint rotated = RotatePointRad(angle, center);
         int offsetX = rotated.X - center.X;
         int offsetY = rotated.Y - center.Y;
         return new Rectangle(rect.x - offsetX, rect.y - offsetY, rect.width, rect.height);
     }
 
     public static TinyPoint RotatePointRad(double angle, TinyPoint p) {
-        return rotatePointRad(new TinyPoint(0, 0), angle, p);
+        return RotatePointRad(new TinyPoint(0, 0), angle, p);
     }
 
     public static TinyPoint RotatePointRad(TinyPoint center, double angle, TinyPoint point) {
@@ -65,7 +65,7 @@ public class Misc {
         dst[0].Right = Math.min(src1.Right, src2.Right);
         dst[0].Top = Math.max(src1.Top, src2.Top);
         dst[0].Bottom = Math.min(src1.Bottom, src2.Bottom);
-        return !isRectEmpty(dst[0]);
+        return !IsRectEmpty(dst[0]);
     }
 
     public static boolean UnionRect(TinyRect[] dst, TinyRect src1, TinyRect src2) {
@@ -74,7 +74,7 @@ public class Misc {
         dst[0].Right = Math.max(src1.Right, src2.Right);
         dst[0].Top = Math.min(src1.Top, src2.Top);
         dst[0].Bottom = Math.max(src1.Bottom, src2.Bottom);
-        return !isRectEmpty(dst[0]);
+        return !IsRectEmpty(dst[0]);
     }
 
     private static boolean IsRectEmpty(TinyRect rect) {

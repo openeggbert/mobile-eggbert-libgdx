@@ -164,7 +164,7 @@ public class InputPad {
 
         // ---- Touch input ----
         List<TinyPoint> touchesOrClicks = new ArrayList<>();
-        if (Env.IMPL.isNotKNI()) {
+        if (Env.IMPL.IsNotKNI()) {
             List<TouchLocation> touches = TouchPanel.GetState();
             touchOrClickCount = touches.size();
             for (TouchLocation item : touches) {
@@ -190,8 +190,8 @@ public class InputPad {
         float screenHeight = Gdx.graphics.getHeight();
         float screenRatio  = screenWidth / screenHeight;
 
-        if ((Env.PLATFORM.isAndroid() && screenRatio > 1.3333333333333333)
-                || (Env.IMPL.isKNI())) {
+        if ((Env.PLATFORM.IsAndroid() && screenRatio > 1.3333333333333333)
+                || (Env.IMPL.IsKNI())) {
             for (int i = 0; i < touchesOrClicks.size(); i++) {
                 TinyPoint touchOrClick = touchesOrClicks.get(i);
                 if (touchOrClick.X == -1) continue;
@@ -284,8 +284,8 @@ public class InputPad {
                 }
 
                 if ((phase == Def.Phase.MainSetup || phase == Def.Phase.PlaySetup)
-                        && accelSlider.move(touchOrClick)) {
-                    gameData.SetAccelSensitivity(accelSlider.getValue());
+                        && accelSlider.Move(touchOrClick)) {
+                    gameData.SetAccelSensitivity(accelSlider.GetValue());
                 }
 
                 switch (pressedGlyph) {
@@ -450,7 +450,7 @@ public class InputPad {
         }
         if ((phase == Def.Phase.MainSetup || phase == Def.Phase.PlaySetup)
                 && gameData.AccelActive()) {
-            accelSlider.draw(pixmap);
+            accelSlider.Draw(pixmap);
         }
     }
 
@@ -799,8 +799,8 @@ public class InputPad {
                 glyphs.add(Def.ButtonGlyph.InitGamerC);
                 glyphs.add(Def.ButtonGlyph.InitSetup);
                 glyphs.add(Def.ButtonGlyph.InitPlay);
-                if (game1.isTrialMode())   glyphs.add(Def.ButtonGlyph.InitBuy);
-                if (game1.isRankingMode()) glyphs.add(Def.ButtonGlyph.InitRanking);
+                if (game1.IsTrialMode())   glyphs.add(Def.ButtonGlyph.InitBuy);
+                if (game1.IsRankingMode()) glyphs.add(Def.ButtonGlyph.InitRanking);
                 break;
             case Play:
                 glyphs.add(Def.ButtonGlyph.PlayPause);
