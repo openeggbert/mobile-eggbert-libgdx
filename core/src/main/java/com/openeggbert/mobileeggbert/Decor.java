@@ -504,7 +504,7 @@ import java.util.Random;
             m_scrollAdd.X = 0;
             m_scrollAdd.Y = 0;
             m_term = 0;
-            byeByeObjects.Clear();
+            byeByeObjects.clear();
         }
 
         public void PlayPrepare(boolean bTest)
@@ -905,7 +905,7 @@ import java.util.Random;
                     m_pixmap.QuickIcon(m_moveObject[num3].channel, m_moveObject[num3].icon, tinyPoint, opacity, 0.0);
                     if (m_moveObject[num3].type == 30)
                     {
-                        for (int l = 0; l < Tables.table_drinkoffset.Length; l++)
+                        for (int l = 0; l < Tables.table_drinkoffset.length; l++)
                         {
                             int num4 = (m_time + Tables.table_drinkoffset[l]) % 50;
                             int rank = Tables.table_drinkeffect[num4 % 5];
@@ -2705,14 +2705,14 @@ import java.util.Random;
                 m_blupiPhase = 0;
                 m_blupiFocus = true;
             }
-            boolean bNear;
+            boolean[] bNear = new boolean[1];
             if (m_blupiAction == 48 && m_blupiPhase == 40)
             {
                 m_blupiAction = 1;
                 m_blupiPhase = 0;
                 m_blupiFocus = true;
                 icon = MoveObjectDetect(end, bNear);
-                if (icon != -1 && !bNear && end.Y - BLUPIFLOOR == m_moveObject[icon].posCurrent.Y)
+                if (icon != -1 && !bNear[0] && end.Y - BLUPIFLOOR == m_moveObject[icon].posCurrent.Y)
                 {
                     if (m_blupiDir == 2 && end.X < m_moveObject[icon].posCurrent.X)
                     {
@@ -5049,7 +5049,7 @@ import java.util.Random;
                     m_blupiRestart = true;
                     m_blupiAir = true;
                 }
-                if (ButtonPressed == Def.ButtonGlyph.PlayAction && (num26 == -1 || !bNear) && IsSwitch(m_blupiPos, celSwitch) && !m_blupiOver && !m_blupiBalloon && !m_blupiJeep && !m_blupiTank && !m_blupiSkate && !m_blupiShield && !m_blupiHide && !m_bSuperBlupi && m_blupiFocus)
+                if (ButtonPressed == Def.ButtonGlyph.PlayAction && (num26 == -1 || !bNear[0]) && IsSwitch(m_blupiPos, celSwitch) && !m_blupiOver && !m_blupiBalloon && !m_blupiJeep && !m_blupiTank && !m_blupiSkate && !m_blupiShield && !m_blupiHide && !m_bSuperBlupi && m_blupiFocus)
                 {
                     ButtonPressed = Def.ButtonGlyph.None;
                     ActiveSwitch(m_decor[celSwitch.X][celSwitch.Y].icon == 385, celSwitch);
@@ -5152,12 +5152,12 @@ import java.util.Random;
             }
             MoveObjectFollow(m_blupiPos);
             icon = num26;
-            if (icon != -1 && !bNear && m_moveObject[icon].type == 2 && !m_blupiHelico && !m_blupiOver && !m_blupiBalloon && !m_blupiEcrase && !m_blupiJeep && !m_blupiTank && !m_blupiSkate && !m_blupiNage && !m_blupiSurf && !m_blupiSuspend && !m_blupiShield && !m_bSuperBlupi && m_blupiFocus)
+            if (icon != -1 && !bNear[0] && m_moveObject[icon].type == 2 && !m_blupiHelico && !m_blupiOver && !m_blupiBalloon && !m_blupiEcrase && !m_blupiJeep && !m_blupiTank && !m_blupiSkate && !m_blupiNage && !m_blupiSurf && !m_blupiSuspend && !m_blupiShield && !m_bSuperBlupi && m_blupiFocus)
             {
                 m_blupiActionOuf = 48;
                 m_blupiTimeOuf = 0;
             }
-            if (icon != -1 && bNear)
+            if (icon != -1 && bNear[0])
             {
                 if (m_moveObject[icon].type == 13 && (ButtonPressed == Def.ButtonGlyph.PlayAction || IsFloatingObject(icon)) && !m_blupiHelico && !m_blupiOver && !m_blupiBalloon && !m_blupiEcrase && !m_blupiJeep && !m_blupiTank && !m_blupiSkate && !m_blupiNage && !m_blupiSurf && !m_blupiSuspend && m_blupiFocus)
                 {
@@ -6140,7 +6140,7 @@ import java.util.Random;
             int num4 = rect.Top / 16;
             int num5 = (rect.Bottom + 16 - 1) / 16;
             TinyRect src = new TinyRect();
-            TinyRect dst;
+            TinyRect[] dst = new TinyRect[1];
             for (int i = num4; i <= num5; i++)
             {
                 for (int j = num2; j <= num3; j++)
@@ -6323,7 +6323,7 @@ import java.util.Random;
                         return;
                     }
                     num = 58;
-                    tinyPoint.X = m_random.Next(-10, 10);
+                    tinyPoint.X = m_random.nextInt(20) + (-10);
                     tinyPoint.Y = 22;
                 }
                 else
@@ -7636,7 +7636,7 @@ import java.util.Random;
             }
             if (m_moveObject[i].type == 8)
             {
-                if (m_moveObject[i].phase >= Tables.table_explo1.Length)
+                if (m_moveObject[i].phase >= Tables.table_explo1.length)
                 {
                     m_moveObject[i].type = 0;
                 }
@@ -8392,7 +8392,7 @@ import java.util.Random;
                 src.Right = m_moveObject[i].posCurrent.X + 64;
                 src.Top = m_moveObject[i].posCurrent.Y;
                 src.Bottom = m_moveObject[i].posCurrent.Y + 16;
-                TinyRect dst;
+                TinyRect[] dst = new TinyRect[1];
                 if (num < 30)
                 {
                     if (Misc.IntersectRect(dst, src, rect))
@@ -8779,7 +8779,7 @@ import java.util.Random;
             }
         }
 
-        private int MoveObjectDetect(TinyPoint pos, boolean bNear)
+        private int MoveObjectDetect(TinyPoint pos, boolean[] bNear)
         {
             TinyRect src = BlupiRect(pos);
             src.Left = pos.X + 16;
@@ -8839,16 +8839,16 @@ import java.util.Random;
                 TinyRect[] dst = new TinyRect[1];
                 if (Misc.IntersectRect(dst, src3, src))
                 {
-                    bNear = true;
+                    bNear[0] = true;
                     return i;
                 }
                 if (m_moveObject[i].type == 2 && Misc.IntersectRect(dst, src3, src2))
                 {
-                    bNear = false;
+                    bNear[0] = false;
                     return i;
                 }
             }
-            bNear = false;
+            bNear[0] = false;
             return -1;
         }
 
@@ -9115,23 +9115,23 @@ import java.util.Random;
             {
                 byeByeObject2.speedX = -(num + 10);
             }
-            byeByeObjects.Add(byeByeObject2);
+            byeByeObjects.add(byeByeObject2);
         }
 
         private void ByeByeStep()
         {
             int num = 0;
-            while (num < byeByeObjects.Count)
+            while (num < byeByeObjects.size())
             {
-                ByeByeObject byeByeObject = byeByeObjects[num];
+                ByeByeObject byeByeObject = byeByeObjects.get(num);
                 double num2 = 10.0 - byeByeObject.phase;
                 if (num2 > 0.0)
                 {
-                    byeByeObject.posY -= Math.Pow(num2, 1.5) * byeByeObject.animationSpeed;
+                    byeByeObject.posY -= Math.pow(num2, 1.5) * byeByeObject.animationSpeed;
                 }
                 if (num2 < 0.0)
                 {
-                    byeByeObject.posY += Math.Pow(0.0 - num2, 1.5) * byeByeObject.animationSpeed;
+                    byeByeObject.posY += Math.pow(0.0 - num2, 1.5) * byeByeObject.animationSpeed;
                 }
                 byeByeObject.posX += byeByeObject.speedX * byeByeObject.animationSpeed;
                 if (byeByeObject.speedX > 0.0)
@@ -9150,7 +9150,7 @@ import java.util.Random;
                 }
                 if (byeByeObject.phase > 30.0)
                 {
-                    byeByeObjects.RemoveAt(num);
+                    byeByeObjects.remove(num);
                 }
                 else
                 {
@@ -9351,7 +9351,7 @@ import java.util.Random;
                 pos.X += m_posDecor.X;
                 pos.Y += m_posDecor.Y;
                 int num2 = array[m_random.nextInt(6) + 0];
-                int num3 = m_random.Next(-10, 10);
+                int num3 = m_random.nextInt(20) + (-10);
                 if (num == 0)
                 {
                     num2 /= 2;
@@ -10123,7 +10123,7 @@ import java.util.Random;
                 return false;
             }
             InitDecor();
-            String[] lines = text.Split('\n');
+            String[] lines = text.split("\n");
             Worlds.GetIntField(lines, "DescFile", 0, "_version_");
             m_posDecor = Worlds.GetPointField(lines, "DescFile", 0, "_posDecor_");
             m_dimDecor = Worlds.GetPointField(lines, "DescFile", 0, "_dimDecor_");
@@ -10262,7 +10262,7 @@ import java.util.Random;
         public boolean Read(int gamer, int rank, boolean bUser)
         {
             InitDecor();
-            String[] array = Worlds.ReadWorld(gamer, rank);
+            String[] array = Worlds.readWorld(gamer, rank);
             if (array == null)
             {
                 return false;
@@ -10349,14 +10349,14 @@ import java.util.Random;
                         {
                             blupi.X = (i - 1) * 64 + 2;
                             blupi.Y = j * 64 + BLUPIOFFY;
-                            dir = 2;
+                            dir[0] = 2;
                             return true;
                         }
                         if (IsPassIcon(m_decor[i + 1][j].icon))
                         {
                             blupi.X = (i + 1) * 64 + 2;
                             blupi.Y = j * 64 + BLUPIOFFY;
-                            dir = 1;
+                            dir[0] = 1;
                             return true;
                         }
                     }
@@ -10434,11 +10434,11 @@ import java.util.Random;
             if (m_mission == 1)
             {
                 TinyPoint blupi = new TinyPoint();
-                int dir = 0;
+                int[] dir = new int[]{0};
                 if (SearchWorld(lastWorld, blupi, dir))
                 {
                     m_blupiStartPos = blupi;
-                    m_blupiStartDir = dir;
+                    m_blupiStartDir = dir[0];
                 }
             }
         }
@@ -10579,4 +10579,3 @@ import java.util.Random;
             m_nbVies = 3;
         }
     }
-}
