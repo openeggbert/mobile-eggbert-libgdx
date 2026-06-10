@@ -171,8 +171,8 @@ public class InputPad {
                 if (item.State() == TouchLocationState.Pressed
                         || item.State() == TouchLocationState.Moved) {
                     TinyPoint touchPress = new TinyPoint(
-                            (int) item.getPosition().x,
-                            (int) item.getPosition().y);
+                            (int) item.Position().x,
+                            (int) item.Position().y);
                     touchesOrClicks.add(touchPress);
                 }
             }
@@ -186,8 +186,8 @@ public class InputPad {
         }
 
         // ---- Screen-ratio coordinate rescaling ----
-        float screenWidth  = Gdx.graphics.Width();
-        float screenHeight = Gdx.graphics.Height();
+        float screenWidth  = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
         float screenRatio  = screenWidth / screenHeight;
 
         if ((Env.PLATFORM.isAndroid() && screenRatio > 1.3333333333333333)
@@ -423,9 +423,9 @@ public class InputPad {
             }
         }
 
-        decor.setSpeedX(horizontalChange);
-        decor.setSpeedY(verticalChange);
-        decor.keyChange(keyPress);
+        decor.SetSpeedX(horizontalChange);
+        decor.SetSpeedY(verticalChange);
+        decor.KeyChange(keyPress);
     }
 
     public void Draw() {
