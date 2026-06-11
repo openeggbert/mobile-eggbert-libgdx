@@ -86,17 +86,18 @@ Java/LibGDX port of **Mobile Eggbert** (Speedy Blupi), originally a Windows Phon
 
 ## What Remains ❌ / Known Issues
 
-### Runtime correctness (struct value semantics)
+### Runtime correctness (struct value semantics) ✅ FIXED
 
-The most significant outstanding issue is **C# struct → Java class aliasing**.
+**C# struct → Java class aliasing** has been systematically fixed in `Decor.java`.
 
-In C#, `TinyPoint` and `TinyRect` are value types (`struct`) — assignment copies the value.
-In Java they are reference types — `TinyPoint p = other` just creates an alias, not a copy.
+The fix covered two patterns:
+1. **Method parameters** — 26 methods that modified a non-`ref` `TinyPoint`/`TinyRect` parameter
+   (in C# this was safe because struct parameters are value copies; in Java they're references).
+   Fix: `pos = pos.Copy();` inserted at the start of each such method body.
+2. **Field/variable assignments** — 65 assignments where `TinyPoint`/`TinyRect` struct fields
+   were assigned without `.Copy()`, creating aliases instead of independent copies.
 
-`Decor.java` has hundreds of such assignments that were not fixed by the automated port.
-These will not cause compile errors but will produce wrong gameplay behaviour (e.g. positions
-shared between objects that should be independent). Each must be changed to `.Copy()` when
-the original C# code intended a copy-by-value.
+All confirmed by a clean `./gradlew desktop:compileJava` build after the fixes.
 
 ### Porting issues fixed during initial run
 
@@ -115,8 +116,7 @@ The following issues were found and fixed to get the game running:
 ### Next steps
 
 1. **Test gameplay** — start a level and verify Blupi moves, physics work, level completes
-2. **Fix struct aliasing** — audit all `TinyPoint`/`TinyRect` assignments in Decor.java,
-   add `.Copy()` wherever C# semantics required a value copy
+2. ~~**Fix struct aliasing**~~ ✅ Done — 26 method params + 65 field assignments fixed
 3. **Sound** — verify audio plays correctly via LibGDX backend
 4. **Save/load** — test `IsolatedStorageFile` save/load of game progress
 5. **Android** — build and test `android:assembleDebug` APK
