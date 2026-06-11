@@ -511,7 +511,7 @@ import java.util.Random;
             m_blupiTimeMockery = 0;
             m_blupiVitesseX = 0.0;
             m_blupiVitesseY = 0.0;
-            m_blupiValidPos = m_blupiStartPos;
+            m_blupiValidPos = m_blupiStartPos.Copy();
             m_blupiFront = false;
             m_blupiBullet = 0;
             m_blupiCle = 0;
@@ -520,7 +520,7 @@ import java.util.Random;
             m_nbTresor = 0;
             m_totalTresor = 1;
             m_goalPhase = 0;
-            m_scrollPoint = m_blupiStartPos;
+            m_scrollPoint = m_blupiStartPos.Copy();
             m_scrollAdd.X = 0;
             m_scrollAdd.Y = 0;
             m_term = 0;
@@ -566,7 +566,7 @@ import java.util.Random;
             m_blupiActionOuf = 0;
             m_blupiTimeNoAsc = 0;
             m_blupiTimeMockery = 0;
-            m_blupiValidPos = m_blupiPos;
+            m_blupiValidPos = m_blupiPos.Copy();
             m_blupiBullet = 0;
             m_blupiCle = 0;
             m_blupiPerso = 0;
@@ -594,14 +594,14 @@ import java.util.Random;
             }
             m_goalPhase = 0;
             MoveObjectSort();
-            m_scrollPoint = m_blupiPos;
+            m_scrollPoint = m_blupiPos.Copy();
             m_scrollAdd.X = 0;
             m_scrollAdd.Y = 0;
             m_blupiPosHelico.X = -1;
             m_blupiMotorSound = 0;
             m_blupiFront = false;
             m_blupiNoBarre = 0;
-            m_blupiValidPos = m_blupiPos;
+            m_blupiValidPos = m_blupiPos.Copy();
             m_blupiFifoNb = 0;
             m_blupiTimeFire = 0;
             m_voyageIcon = -1;
@@ -3485,7 +3485,7 @@ import java.util.Random;
                         m_blupiHelico = false;
                         m_blupiAction = 1;
                         m_blupiPhase = 0;
-                        m_blupiPosHelico = m_blupiPos;
+                        m_blupiPosHelico = m_blupiPos.Copy();
                         m_blupiFocus = true;
                         StopSound(16);
                         StopSound(18);
@@ -3606,7 +3606,7 @@ import java.util.Random;
                         m_blupiOver = false;
                         m_blupiAction = 1;
                         m_blupiPhase = 0;
-                        m_blupiPosHelico = m_blupiPos;
+                        m_blupiPosHelico = m_blupiPos.Copy();
                         m_blupiFocus = true;
                         StopSound(16);
                         StopSound(18);
@@ -3878,7 +3878,7 @@ import java.util.Random;
                     m_blupiJeep = false;
                     m_blupiAction = 1;
                     m_blupiPhase = 0;
-                    m_blupiPosHelico = m_blupiPos;
+                    m_blupiPosHelico = m_blupiPos.Copy();
                     StopSound(29);
                     StopSound(31);
                     PlaySound(30, m_blupiPos);
@@ -4010,7 +4010,7 @@ import java.util.Random;
                     m_blupiTank = false;
                     m_blupiAction = 1;
                     m_blupiPhase = 0;
-                    m_blupiPosHelico = m_blupiPos;
+                    m_blupiPosHelico = m_blupiPos.Copy();
                     StopSound(29);
                     StopSound(31);
                     PlaySound(30, m_blupiPos);
@@ -4070,7 +4070,7 @@ import java.util.Random;
                     m_blupiAction = 43;
                     m_blupiPhase = 0;
                     m_blupiFocus = false;
-                    m_blupiPosHelico = m_blupiPos;
+                    m_blupiPosHelico = m_blupiPos.Copy();
                 }
             }
             if (m_blupiAction == 42)
@@ -4414,7 +4414,7 @@ import java.util.Random;
                 }
             }
             rect = BlupiRect(m_blupiPos);
-            tinyPoint = end;
+            tinyPoint = end.Copy();
             TestPath(rect, m_blupiPos, end);
             if (flag && m_blupiPos.X == end.X && m_blupiPos.X != tinyPoint.X)
             {
@@ -5297,7 +5297,7 @@ import java.util.Random;
                     PlaySound(41, m_blupiPos);
                     m_blupiPos.Y += 4;
                     m_blupiVitesseY = 0.0;
-                    m_blupiPosHelico = m_blupiPos;
+                    m_blupiPosHelico = m_blupiPos.Copy();
                 }
                 else if ((m_moveObject[icon].type == 2 || m_moveObject[icon].type == 3 || m_moveObject[icon].type == 96 || m_moveObject[icon].type == 97 || m_moveObject[icon].type == 16 || m_moveObject[icon].type == 4 || m_moveObject[icon].type == 17 || m_moveObject[icon].type == 20) && !m_blupiShield && !m_blupiHide && !m_bSuperBlupi && m_blupiPosHelico.X == -1)
                 {
@@ -5603,7 +5603,7 @@ import java.util.Random;
                     {
                         ObjectDelete(m_moveObject[icon].posCurrent, m_moveObject[icon].type);
                         BlupiDead(11, 75);
-                        celSwitch = m_moveObject[icon].posCurrent;
+                        celSwitch = m_moveObject[icon].posCurrent.Copy();
                         celSwitch.X -= 34;
                         celSwitch.Y -= 34;
                         ObjectStart(celSwitch, 10, 0);
@@ -5627,7 +5627,7 @@ import java.util.Random;
                 }
                 if (m_moveObject[icon].type == 12 && !m_blupiHelico && !m_blupiOver && !m_blupiBalloon && !m_blupiEcrase && !m_blupiJeep && !m_blupiTank && !m_blupiSkate && !m_blupiNage && !m_blupiSurf && !m_blupiSuspend && m_blupiFocus && m_blupiAction == 2)
                 {
-                    end = m_moveObject[icon].posCurrent;
+                    end = m_moveObject[icon].posCurrent.Copy();
                     if (m_blupiDir == 1 && m_blupiPos.X > end.X)
                     {
                         end.X = m_blupiPos.X - 59;
@@ -5698,7 +5698,7 @@ import java.util.Random;
                 icon = CaisseInFront();
                 if (icon != -1)
                 {
-                    end = m_moveObject[icon].posCurrent;
+                    end = m_moveObject[icon].posCurrent.Copy();
                     if (m_blupiDir == 1)
                     {
                         end.X = m_blupiPos.X - 59;
@@ -5723,7 +5723,7 @@ import java.util.Random;
                 icon = CaisseInFront();
                 if (icon != -1)
                 {
-                    end = m_moveObject[icon].posCurrent;
+                    end = m_moveObject[icon].posCurrent.Copy();
                     if (m_blupiDir == 1)
                     {
                         end.X = m_blupiPos.X - 59;
@@ -5850,7 +5850,7 @@ import java.util.Random;
                     ObjectStart(m_blupiPos, 27, -20);
                 }
                 m_blupiFocus = true;
-                m_blupiPosHelico = m_blupiPos;
+                m_blupiPosHelico = m_blupiPos.Copy();
             }
             if (m_blupiAction == 82 && m_blupiPhase == 10)
             {
@@ -5958,7 +5958,7 @@ import java.util.Random;
             {
                 if (m_blupiFifoNb > 0)
                 {
-                    m_blupiValidPos = m_blupiFifoPos[0];
+                    m_blupiValidPos = m_blupiFifoPos[0].Copy();
                 }
                 BlupiAddFifo(m_blupiPos);
             }
@@ -6234,7 +6234,7 @@ import java.util.Random;
                         rect2.Bottom = rect.Bottom + num3;
                         if (DecorDetect(rect2))
                         {
-                            end = tinyPoint;
+                            end.X = tinyPoint.X; end.Y = tinyPoint.Y;
                             return false;
                         }
                         tinyPoint.X = start.X + i;
@@ -6252,7 +6252,7 @@ import java.util.Random;
                         rect2.Bottom = rect.Bottom + num3;
                         if (DecorDetect(rect2))
                         {
-                            end = tinyPoint;
+                            end.X = tinyPoint.X; end.Y = tinyPoint.Y;
                             return false;
                         }
                         tinyPoint.X = start.X + i;
@@ -6266,14 +6266,14 @@ import java.util.Random;
                 {
                     for (int num3 = 0; num3 <= num2; num3++)
                     {
-                        int i = num3 * (end.X - start.X) / num2;
+                        int i = (num2 == 0) ? 0 : num3 * (end.X - start.X) / num2;
                         rect2.Left = rect.Left + i;
                         rect2.Right = rect.Right + i;
                         rect2.Top = rect.Top + num3;
                         rect2.Bottom = rect.Bottom + num3;
                         if (DecorDetect(rect2))
                         {
-                            end = tinyPoint;
+                            end.X = tinyPoint.X; end.Y = tinyPoint.Y;
                             return false;
                         }
                         tinyPoint.X = start.X + i;
@@ -6284,14 +6284,14 @@ import java.util.Random;
                 {
                     for (int num3 = 0; num3 >= -num2; num3--)
                     {
-                        int i = num3 * (start.X - end.X) / num2;
+                        int i = (num2 == 0) ? 0 : num3 * (start.X - end.X) / num2;
                         rect2.Left = rect.Left + i;
                         rect2.Right = rect.Right + i;
                         rect2.Top = rect.Top + num3;
                         rect2.Bottom = rect.Bottom + num3;
                         if (DecorDetect(rect2))
                         {
-                            end = tinyPoint;
+                            end.X = tinyPoint.X; end.Y = tinyPoint.Y;
                             return false;
                         }
                         tinyPoint.X = start.X + i;
@@ -7333,12 +7333,12 @@ import java.util.Random;
                 tinyRect.Bottom = m_moveObject[i].posCurrent.Y + 16;
                 TinyRect[] dst = new TinyRect[1];
                 flag = Misc.IntersectRect(dst, tinyRect, src);
-                tinyPoint = m_moveObject[i].posCurrent;
+                tinyPoint = m_moveObject[i].posCurrent.Copy();
             }
             TinyPoint end;
             if (m_blupiFocus && !m_blupiHide && m_moveObject[i].type == 97)
             {
-                end = m_moveObject[i].posCurrent;
+                end = m_moveObject[i].posCurrent.Copy();
                 if (end.X < m_blupiPos.X)
                 {
                     end.X++;
@@ -7452,7 +7452,7 @@ import java.util.Random;
             {
                 m_moveObject[i].type = 0;
             }
-            end = m_moveObject[i].posCurrent;
+            end = m_moveObject[i].posCurrent.Copy();
             if (m_moveObject[i].type == 1 || m_moveObject[i].type == 47 || m_moveObject[i].type == 48)
             {
                 end.Y -= 64;

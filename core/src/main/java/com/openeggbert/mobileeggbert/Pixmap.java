@@ -72,8 +72,8 @@ public class Pixmap {
 
     public TinyPoint HotSpotToHud(TinyPoint pos) {
         TinyPoint result = new TinyPoint();
-        result.X = (int)((double)(pos.X - (int)hotSpotX) / hotSpotZoom) + (int)hotSpotX - (int)originX;
-        result.Y = (int)((double)(pos.Y - (int)hotSpotY) / hotSpotZoom) + (int)hotSpotY - (int)originY;
+        result.X = (int)((double)(pos.X - (int)hotSpotX) / hotSpotZoom) + (int)hotSpotX;
+        result.Y = (int)((double)(pos.Y - (int)hotSpotY) / hotSpotZoom) + (int)hotSpotY;
         return result;
     }
 
@@ -142,7 +142,7 @@ public class Pixmap {
         UpdateGeometry();
     }
 
-    private void UpdateGeometry() {
+    public void UpdateGeometry() {
         double screenWidth = graphics.GraphicsDevice().Viewport().Width();
         double screenHeight = graphics.GraphicsDevice().Viewport().Height();
         if (Env.PLATFORM == EnvClasses.Platform.Android && screenHeight > 480) {

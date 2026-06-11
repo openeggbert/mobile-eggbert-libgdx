@@ -14,119 +14,93 @@ Java/LibGDX port of **Mobile Eggbert** (Speedy Blupi), originally a Windows Phon
 
 ### Infrastructure
 - Gradle 8.4 multi-module project: `core/`, `desktop/`, `android/`
-- `DesktopLauncher` (LWJGL3 backend)
+- `DesktopLauncher` (LWJGL3 backend, 640×480 window, 30 fps)
 - `AndroidLauncher` (Android backend)
 - `CLAUDE.md` with full naming convention guidelines
 
-### XNA Bridge — `System.*`
-| File | Status |
-|---|---|
-| `System/EventArgs.java` | ✅ Done |
-| `System/TimeSpan.java` | ✅ Done |
-| `System/IO/IsolatedStorage/IsolatedStorageFile.java` | ✅ Done |
-| `System/IO/IsolatedStorage/IsolatedStorageFileStream.java` | ✅ Done |
-| `System/IO/IsolatedStorage/IsolatedStorageException.java` | ✅ Done |
-
-### XNA Bridge — `Microsoft.Xna.Framework.*`
-| File | Status |
-|---|---|
-| `Game.java` | ✅ Done |
-| `GameTime.java` | ✅ Done |
-| `GraphicsDeviceManager.java` | ✅ Done |
-| `Color.java` | ✅ Done |
-| `Rectangle.java` | ✅ Done |
-| `Vector2.java` | ✅ Done |
-| `TitleContainer.java` | ✅ Done |
-| `Graphics/GraphicsDevice.java` | ✅ Done |
-| `Graphics/Viewport.java` | ✅ Done |
-| `Graphics/SpriteBatch.java` | ✅ Done |
-| `Graphics/Texture2D.java` | ✅ Done |
-| `Graphics/SpriteEffects.java` | ✅ Done |
-| `Graphics/BlendState.java` | ✅ Done |
-| `Graphics/SpriteSortMode.java` | ✅ Done |
-| `Audio/SoundEffect.java` | ✅ Done |
-| `Audio/SoundEffectInstance.java` | ✅ Done |
-| `Audio/SoundState.java` | ✅ Done |
-| `Input/Touch/TouchPanel.java` | ✅ Done |
-| `Input/Touch/TouchLocation.java` | ✅ Done |
-| `Input/Touch/TouchLocationState.java` | ✅ Done |
-| `Input/Touch/TouchPanelCapabilities.java` | ✅ Done |
-| `Content/ContentManager.java` | ✅ Done |
+### XNA Bridge — `System.*` and `Microsoft.Xna.Framework.*`
+All 24 bridge files complete (EventArgs, TimeSpan, IsolatedStorage, Game, GameTime, GraphicsDeviceManager, Color, Rectangle, Vector2, TitleContainer, GraphicsDevice, Viewport, SpriteBatch, Texture2D, SpriteEffects, BlendState, SpriteSortMode, SoundEffect, SoundEffectInstance, SoundState, TouchPanel, TouchLocation, TouchLocationState, TouchPanelCapabilities, ContentManager).
 
 ### Game Classes — `com.openeggbert.mobileeggbert`
-| C# Source | Java File | Lines (C#) | Status |
-|---|---|---|---|
-| `Config.cs` | `Config.java` | 6 | ✅ Done |
-| `DDebug.cs` | `DDebug.java` | 22 | ✅ Done |
-| `Def.cs` | `Def.java` | 702 | ✅ Done |
-| `Env.cs` | `Env.java` | 24 | ✅ Done |
-| `EnvClasses.cs` | `EnvClasses.java` | 131 | ✅ Done |
-| `TinyPoint.cs` | `TinyPoint.java` | 22 | ✅ Done |
-| `TinyRect.cs` | `TinyRect.java` | 53 | ✅ Done |
-| `Misc.cs` | `Misc.java` | 126 | ✅ Done |
-| `GameData.cs` | `GameData.java` | 221 | ✅ Done |
-| `Worlds.cs` | `Worlds.java` | 556 | ✅ Done |
-| `Text.cs` | `Text.java` | 294 | ✅ Done |
-| `Tables.cs` | `Tables.java` | 1,714 | ✅ Done |
-| `MyResource.cs` | `MyResource.java` | 775 | ✅ Done |
-| `Jauge.cs` | `Jauge.java` | 158 | ✅ Done |
-| `Slider.cs` | `Slider.java` | 95 | ✅ Done |
-| `Sound.cs` | `Sound.java` | 254 | ✅ Done |
-| `Pixmap.cs` | `Pixmap.java` | 571 | ✅ Done |
-| `InputPad.cs` | `InputPad.java` | 1,002 | ✅ Done |
-| `Game1.cs` | `Game1.java` | 1,008 | ✅ Done |
-| `Decor.cs` | `Decor.java` | **10,596** | ✅ Done |
+All 20 C# source files ported (~18,400 lines, 100%):
+Config, DDebug, Def, Env, EnvClasses, TinyPoint, TinyRect, Misc, GameData, Worlds, Text, Tables, MyResource, Jauge, Slider, Sound, Pixmap, InputPad, Game1, Decor.
 
-### Progress by Lines of Code
-- **Ported**: ~18,400 lines of C# game logic (100%)
-- **Missing**: nothing
-- **By files**: 20 of 20 C# files complete (100%)
-
----
-
-## What Remains ❌ / Known Issues
-
-### Runtime correctness (struct value semantics) ✅ FIXED
-
-**C# struct → Java class aliasing** has been systematically fixed in `Decor.java`.
-
-The fix covered two patterns:
-1. **Method parameters** — 26 methods that modified a non-`ref` `TinyPoint`/`TinyRect` parameter
-   (in C# this was safe because struct parameters are value copies; in Java they're references).
-   Fix: `pos = pos.Copy();` inserted at the start of each such method body.
-2. **Field/variable assignments** — 65 assignments where `TinyPoint`/`TinyRect` struct fields
-   were assigned without `.Copy()`, creating aliases instead of independent copies.
-
-All confirmed by a clean `./gradlew desktop:compileJava` build after the fixes.
-
-### Porting issues fixed during initial run
-
-The following issues were found and fixed to get the game running:
-
+### Porting fixes applied during initial run
 | Issue | Fix |
 |---|---|
 | 49 naming-convention errors (camelCase call sites) | Fixed in Game1, InputPad, Misc, Text, Pixmap |
 | Qualified enum cases in switch (`Def.ButtonGlyph.X`) — invalid in Java 11 | Removed qualifier |
-| C# struct fields (`TinyPoint`, `TinyRect`) were `null` at runtime | Added `= new TinyPoint()` / `= new TinyRect()` at declaration |
+| C# struct fields (`TinyPoint`, `TinyRect`) null at runtime | Added `= new TinyPoint()` / `= new TinyRect()` at declaration |
 | `Cellule[][]`, `MoveObject[]`, `TinyPoint[]` element nulls | Added `initCellule2D`, `initMoveObject`, `initTinyPoints` helpers |
 | C# format strings `{0}`, `{1}` not replaced by `%s` | Fixed in Decor.java |
 | `String.split(",")` drops trailing empty fields | Changed to `split(",", -1)` in Worlds.java |
 | `android/build.gradle` missing `natives` configuration | Added `configurations { natives }` |
 
-### Next steps
+### Struct aliasing fixes (C# struct value semantics → Java)
 
-1. **Test gameplay** — start a level and verify Blupi moves, physics work, level completes
-2. ~~**Fix struct aliasing**~~ ✅ Done — 26 method params + 65 field assignments fixed
-3. **Sound** — verify audio plays correctly via LibGDX backend
-4. **Save/load** — test `IsolatedStorageFile` save/load of game progress
-5. **Android** — build and test `android:assembleDebug` APK
+C# structs are copied on assignment; Java objects are aliased. Two fix passes were done in `Decor.java`:
+
+**Pass 1** — 26 method parameters + 65 field assignments fixed with `.Copy()`.
+
+**Pass 2** — 9 additional critical bugs found and fixed:
+
+| Location | Bug | Effect |
+|---|---|---|
+| Line 4417: `tinyPoint = end` | alias — modifying `end` also changed `tinyPoint` | Wall-sliding correction never fired; Blupi got stuck |
+| Line 5606: `celSwitch = m_moveObject[icon].posCurrent` | alias — `celSwitch.X -= 34` corrupted `posCurrent.X` | `PlaySound` used wrong position |
+| Lines 5630, 5701, 5726: `end = m_moveObject[icon].posCurrent` | alias — `end.X = newValue` changed `posCurrent.X` | Box pushing always computed `move.X = 0`; pushing broken |
+| Line 7336: `tinyPoint = m_moveObject[i].posCurrent` | alias — `posCurrent.X - tinyPoint.X` always 0 | Moving platform velocity always zero; Blupi didn't ride platforms |
+| Line 7341: `end = m_moveObject[i].posCurrent` | alias — `end.X++` advanced `posCurrent.X`; start == end | No path/collision testing for type-97 enemies |
+| Line 7455: `end = m_moveObject[i].posCurrent` | alias — `end.X = (end.X+32)/64` (grid coord conversion) corrupted `posCurrent.X` to ~5–30 every frame | ALL animated objects (doors, enemies, coins) drawn near top-left; doors appeared not to open |
+| 7 locations: `m_blupiPosHelico = m_blupiPos` | alias — helicopter position always equaled Blupi position | Helicopter mode behaved incorrectly |
+
+### SpriteBatch projection (game-space letterboxing)
+`SpriteBatch.Begin()` now sets an orthographic projection that maps game coordinates (0,0)–(640,480) directly to a letterboxed screen area. Drawing code no longer needs to apply zoom or origin offsets manually.
 
 ---
 
-## Build Instructions
+## What Remains ❌
+
+### 1. Pixmap.java — remove manual zoom/origin offsets ⬅ NEXT TASK
+
+Now that SpriteBatch handles the projection, `Pixmap.java` still contains legacy manual scaling and origin-offset code that must be removed. Without this fix, graphics are broken on resize and in fullscreen.
+
+Changes needed:
+
+| Method | What to change |
+|---|---|
+| `GetDstRectangle` (lines ~310–326) | Remove `* zoom` from scaledL/T/R/B; remove origin offset additions |
+| `DrawBackground` (lines ~169–185) | Change `dest = new TinyPoint((int)originX, (int)originY)` → `new TinyPoint(0, 0)`; add GL clear for black letterbox bars |
+| `DrawChar` (lines ~187–196) | Remove `pos.X += originX; pos.Y += originY` |
+| `HudIcon` (lines ~198–204) | Remove `pos.X += originX; pos.Y += originY` |
+| `DrawPart` channel-5 block (lines ~222–225) | Remove `d.X += originX; d.Y += originY` |
+| `DrawInputButton` (line ~118) | Remove `- (int)originX` from cheat-button text position |
+
+`HotSpotToHud` origin offset already removed ✅.
+
+### 2. Gameplay testing
+After the Pixmap fix, run and verify:
+- Blupi moves and collides correctly
+- Doors open after collecting chest
+- Box pushing works
+- Moving platforms carry Blupi
+- Level complete / win condition triggers
+
+### 3. Sound
+Verify audio plays correctly via LibGDX `Sound` backend.
+
+### 4. Save / load
+Test `IsolatedStorageFile` save/load of game progress (settings, world progress).
+
+### 5. Android
+Build and test `android:assembleDebug` APK on device/emulator.
+
+---
+
+## Build
 
 ```bash
-# Desktop run (from project root)
+# Desktop run
 ./gradlew desktop:run
 
 # Desktop JAR
@@ -143,5 +117,7 @@ Assets from `speedyblupi-data` repo must be in `core/assets/`.
 ## Notes
 
 - `Resource.cs` (61 lines) from the C# source has no direct Java counterpart — replaced by `MyResource.java`
-- All method names are PascalCase (C# style), not camelCase — this is intentional
+- All method names are PascalCase (C# style) — intentional, do not change
 - `TinyRect` field order is non-standard: `Left, Right, Top, Bottom` (not `Left, Top, Right, Bottom`)
+- `gradlew` script does `exec gradle` on a directory, not a binary — use cached gradle directly:
+  `/home/robertvokac/.gradle/wrapper/dists/gradle-8.4-bin/1w5dpkrfk8irigvoxmyhowfim/gradle-8.4/bin/gradle`

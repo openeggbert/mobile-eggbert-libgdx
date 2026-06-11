@@ -14,7 +14,7 @@ public class DesktopLauncher {
         config.setTitle("Mobile Eggbert");
         config.setWindowedMode(640, 480);
         config.useVsync(true);
-        config.setForegroundFPS(60);
+        config.setForegroundFPS(30);
 
         new Lwjgl3Application(new Game1(), config);
     }

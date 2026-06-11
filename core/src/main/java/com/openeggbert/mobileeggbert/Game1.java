@@ -247,6 +247,8 @@ public class Game1 extends Game {
 
     @Override
     protected void Draw(GameTime gameTime) {
+        pixmap.UpdateGeometry();
+        inputPad.SetPixmapOrigin(pixmap.Origin());
         if (continueMission == 1) continueMission = 2;
         if (phase == Def.Phase.Wait || phase == Def.Phase.Init || phase == Def.Phase.Pause
                 || phase == Def.Phase.Resume || phase == Def.Phase.Lost || phase == Def.Phase.Win
