@@ -90,7 +90,8 @@ Verify audio plays correctly via LibGDX `Sound` backend.
 Test `IsolatedStorageFile` save/load of game progress (settings, world progress).
 
 ### 5. Android
-Build and test `android:assembleDebug` APK on device/emulator.
+APK builds successfully ✅ (`android:assembleDebug` → `android/build/outputs/apk/debug/android-debug.apk`).
+Needs testing on device/emulator.
 
 ---
 
@@ -116,5 +117,5 @@ Assets from `speedyblupi-data` repo must be in `core/assets/`.
 - `Resource.cs` (61 lines) from the C# source has no direct Java counterpart — replaced by `MyResource.java`
 - All method names are PascalCase (C# style) — intentional, do not change
 - `TinyRect` field order is non-standard: `Left, Right, Top, Bottom` (not `Left, Top, Right, Bottom`)
-- `gradlew` script does `exec gradle` on a directory, not a binary — use cached gradle directly:
-  `/home/robertvokac/.gradle/wrapper/dists/gradle-8.4-bin/1w5dpkrfk8irigvoxmyhowfim/gradle-8.4/bin/gradle`
+- Gradle 8.12 + AGP 8.5 required for Android build (JDK 21 compatibility); desktop also works with 8.12
+- Cached Gradle binary: `/home/robertvokac/.gradle/wrapper/dists/gradle-8.12-bin/cetblhg4pflnnks72fxwobvgv/gradle-8.12/bin/gradle`
