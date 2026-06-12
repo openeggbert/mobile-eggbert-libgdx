@@ -4450,7 +4450,7 @@ import java.util.Random;
             {
                 if (m_blupiTransport != -1)
                 {
-                    AscenseurVertigo(m_blupiTransport, bVertigoLeft, bVertigoRight);
+                    { boolean[] _vl = {false}, _vr = {false}; AscenseurVertigo(m_blupiTransport, _vl, _vr); bVertigoLeft = _vl[0]; bVertigoRight = _vr[0]; }
                 }
                 else
                 {
@@ -4507,7 +4507,7 @@ import java.util.Random;
             {
                 if (m_blupiTransport != -1)
                 {
-                    AscenseurVertigo(m_blupiTransport, bVertigoLeft, bVertigoRight);
+                    { boolean[] _vl = {false}, _vr = {false}; AscenseurVertigo(m_blupiTransport, _vl, _vr); bVertigoLeft = _vl[0]; bVertigoRight = _vr[0]; }
                 }
                 else
                 {
@@ -4537,7 +4537,7 @@ import java.util.Random;
             {
                 if (m_blupiTransport != -1)
                 {
-                    AscenseurVertigo(m_blupiTransport, bVertigoLeft, bVertigoRight);
+                    { boolean[] _vl = {false}, _vr = {false}; AscenseurVertigo(m_blupiTransport, _vl, _vr); bVertigoLeft = _vl[0]; bVertigoRight = _vr[0]; }
                 }
                 else
                 {
@@ -4567,7 +4567,7 @@ import java.util.Random;
             {
                 if (m_blupiTransport != -1)
                 {
-                    AscenseurVertigo(m_blupiTransport, bVertigoLeft, bVertigoRight);
+                    { boolean[] _vl = {false}, _vr = {false}; AscenseurVertigo(m_blupiTransport, _vl, _vr); bVertigoLeft = _vl[0]; bVertigoRight = _vr[0]; }
                 }
                 else
                 {
@@ -8465,30 +8465,30 @@ import java.util.Random;
             return -1;
         }
 
-        private void AscenseurVertigo(int i, boolean bVertigoLeft, boolean bVertigoRight)
+        private void AscenseurVertigo(int i, boolean[] bVertigoLeft, boolean[] bVertigoRight)
         {
-            bVertigoLeft = false;
-            bVertigoRight = false;
+            bVertigoLeft[0] = false;
+            bVertigoRight[0] = false;
             if (m_blupiPos.X + 20 + 4 < m_moveObject[i].posCurrent.X)
             {
-                bVertigoLeft = true;
+                bVertigoLeft[0] = true;
             }
             if (m_blupiPos.X + 60 - 20 - 4 > m_moveObject[i].posCurrent.X + 64)
             {
-                bVertigoRight = true;
+                bVertigoRight[0] = true;
             }
             if (AscenseurShift(i))
             {
-                if (bVertigoLeft)
+                if (bVertigoLeft[0])
                 {
-                    bVertigoLeft = false;
-                    bVertigoRight = true;
+                    bVertigoLeft[0] = false;
+                    bVertigoRight[0] = true;
                     m_blupiTimeNoAsc = 10;
                 }
-                else if (bVertigoRight)
+                else if (bVertigoRight[0])
                 {
-                    bVertigoRight = false;
-                    bVertigoLeft = true;
+                    bVertigoRight[0] = false;
+                    bVertigoLeft[0] = true;
                     m_blupiTimeNoAsc = 10;
                 }
             }

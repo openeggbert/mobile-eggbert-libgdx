@@ -36,6 +36,14 @@ Config, DDebug, Def, Env, EnvClasses, TinyPoint, TinyRect, Misc, GameData, World
 | `String.split(",")` drops trailing empty fields | Changed to `split(",", -1)` in Worlds.java |
 | `android/build.gradle` missing `natives` configuration | Added `configurations { natives }` |
 
+### `out`/`ref` parameter fixes
+
+All C# `ref`/`out` parameters audited and fixed in `Decor.java`, `Misc.java`, `GameData.java`:
+- `ref TinyPoint`: 8 methods — `TestPath` uses `end.X/Y =` in-place (correct), others only modify fields (naturally correct in Java)
+- `out bool`: **`AscenseurVertigo`** was broken (primitives don't propagate) — fixed to `boolean[]` pattern ✅
+- `out TinyRect`: `IntersectRect` and `UnionRect` use `TinyRect[]` correctly ✅
+- `out int`: `GetGamerInfo` uses `int[]` correctly ✅
+
 ### Struct aliasing fixes (C# struct value semantics → Java)
 
 C# structs are copied on assignment; Java objects are aliased. Two fix passes were done in `Decor.java`:
@@ -61,25 +69,14 @@ C# structs are copied on assignment; Java objects are aliased. Two fix passes we
 
 ## What Remains ❌
 
-### 1. Pixmap.java — remove manual zoom/origin offsets ⬅ NEXT TASK
+### 1. Pixmap.java — remove manual zoom/origin offsets ✅ DONE
 
-Now that SpriteBatch handles the projection, `Pixmap.java` still contains legacy manual scaling and origin-offset code that must be removed. Without this fix, graphics are broken on resize and in fullscreen.
-
-Changes needed:
-
-| Method | What to change |
-|---|---|
-| `GetDstRectangle` (lines ~310–326) | Remove `* zoom` from scaledL/T/R/B; remove origin offset additions |
-| `DrawBackground` (lines ~169–185) | Change `dest = new TinyPoint((int)originX, (int)originY)` → `new TinyPoint(0, 0)`; add GL clear for black letterbox bars |
-| `DrawChar` (lines ~187–196) | Remove `pos.X += originX; pos.Y += originY` |
-| `HudIcon` (lines ~198–204) | Remove `pos.X += originX; pos.Y += originY` |
-| `DrawPart` channel-5 block (lines ~222–225) | Remove `d.X += originX; d.Y += originY` |
-| `DrawInputButton` (line ~118) | Remove `- (int)originX` from cheat-button text position |
-
-`HotSpotToHud` origin offset already removed ✅.
+SpriteBatch now handles the letterboxed projection. Manual zoom/origin removed from:
+`GetDstRectangle`, `DrawBackground` (simplified to one DrawPart at (0,0)), `DrawChar`, `HudIcon`, `DrawPart` channel-5, `DrawInputButton` cheat button, `HotSpotToHud`.
+`Start()` now clears to `Color.Black` for black letterbox bars.
 
 ### 2. Gameplay testing
-After the Pixmap fix, run and verify:
+Run and verify:
 - Blupi moves and collides correctly
 - Doors open after collecting chest
 - Box pushing works

@@ -115,7 +115,7 @@ public class Pixmap {
             case Cheat6: case Cheat7: case Cheat8: case Cheat9: {
                 DrawIcon(14, 0, rect, pressed ? 0.6 : 1.0, false);
                 TinyPoint pos = new TinyPoint(
-                    rect.Left + rect.Width() / 2 - (int)originX,
+                    rect.Left + rect.Width() / 2,
                     rect.Top + 28
                 );
                 Text.DrawTextCenter(this, pos, Decor.GetCheatTinyText(glyph), 1.0);
@@ -160,34 +160,20 @@ public class Pixmap {
     }
 
     public boolean Start() {
-        graphics.GraphicsDevice().Clear(Color.CornflowerBlue);
+        graphics.GraphicsDevice().Clear(Color.Black);
         return true;
     }
 
     public boolean Finish() { return true; }
 
     public void DrawBackground() {
-        double screenWidth = graphics.GraphicsDevice().Viewport().Width();
-        double screenHeight = graphics.GraphicsDevice().Viewport().Height();
-        if (Env.PLATFORM == EnvClasses.Platform.Android && screenHeight > 480) {
-            screenWidth = screenHeight * (640.0 / 480.0);
-        }
-        Texture2D bitmap = GetBitmap(3);
-        Rectangle srcRectangle = GetSrcRectangle(bitmap, 10, 10, 10, 10, 0, 0);
-        Rectangle destRectangle = new Rectangle(0, 0, (int) screenWidth, (int) screenHeight);
-        spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-        spriteBatch.Draw(bitmap, destRectangle, srcRectangle, Color.White);
-        spriteBatch.End();
-
-        TinyPoint dest = new TinyPoint((int) originX, (int) originY);
+        TinyPoint dest = new TinyPoint(0, 0);
         TinyRect rect = new TinyRect(0, 640, 0, 480);
         DrawPart(3, dest, rect);
     }
 
     public void DrawChar(int rank, TinyPoint pos, double size) {
         pos = pos.Copy();
-        pos.X = (int)(pos.X + originX);
-        pos.Y = (int)(pos.Y + originY);
         TinyRect rect = new TinyRect(
             pos.X, pos.X + (int)(32.0 * size),
             pos.Y, pos.Y + (int)(32.0 * size)
@@ -196,9 +182,6 @@ public class Pixmap {
     }
 
     public void HudIcon(int channel, int rank, TinyPoint pos) {
-        pos = pos.Copy();
-        pos.X = (int)(pos.X + originX);
-        pos.Y = (int)(pos.Y + originY);
         TinyRect rect = new TinyRect(pos);
         DrawIcon(channel, rank, rect, 1.0, false);
     }
@@ -219,10 +202,6 @@ public class Pixmap {
         Texture2D bitmap = GetBitmap(channel);
         if (bitmap == null) return false;
         TinyPoint d = dest.Copy();
-        if (channel == 5) {
-            d.X = (int)(d.X + originX);
-            d.Y = (int)(d.Y + originY);
-        }
         Rectangle src = new Rectangle(rect.Left, rect.Top, rect.Width(), rect.Height());
         Rectangle dst = new Rectangle(d.X, d.Y,
             (int)(rect.Width() * zoomFactor),
@@ -310,10 +289,10 @@ public class Pixmap {
     private Rectangle GetDstRectangle(TinyRect rect, int iconWidth, int iconHeight, boolean useHotSpot) {
         int finalWidth  = (rect.Width()  == 0) ? iconWidth  : rect.Width();
         int finalHeight = (rect.Height() == 0) ? iconHeight : rect.Height();
-        int scaledL = (int)(rect.Left * zoom);
-        int scaledT = (int)(rect.Top * zoom);
-        int scaledR = (int)(scaledL + finalWidth  * zoom);
-        int scaledB = (int)(scaledT + finalHeight * zoom);
+        int scaledL = rect.Left;
+        int scaledT = rect.Top;
+        int scaledR = scaledL + finalWidth;
+        int scaledB = scaledT + finalHeight;
         if (useHotSpot && hotSpotZoom > 1.0) {
             scaledL -= (int)hotSpotX; scaledT -= (int)hotSpotY;
             scaledR -= (int)hotSpotX; scaledB -= (int)hotSpotY;
