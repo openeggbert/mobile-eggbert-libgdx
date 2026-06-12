@@ -44,7 +44,8 @@ public class Pixmap {
     }
 
     public TinyPoint Origin() {
-        return new TinyPoint((int) originX, (int) originY);
+        // Game space always starts at (0,0); SpriteBatch projection handles screen offset.
+        return new TinyPoint(0, 0);
     }
 
     public Pixmap(Game1 game1, GraphicsDeviceManager graphics) {
