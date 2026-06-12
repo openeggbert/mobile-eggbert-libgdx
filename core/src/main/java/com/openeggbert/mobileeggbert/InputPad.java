@@ -185,37 +185,21 @@ public class InputPad {
             touchesOrClicks.add(mouseClick);
         }
 
-        // ---- Screen-ratio coordinate rescaling ----
+        // ---- Screen pixel → game coordinate conversion (letterbox-aware) ----
+        // SpriteBatch projects game coords (0,0)-(640,480) to the letterboxed screen area.
+        // Input arrives in screen pixels; convert to game coords using the same scale/offset.
         float screenWidth  = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        float screenRatio  = screenWidth / screenHeight;
-
-        if ((Env.PLATFORM.IsAndroid() && screenRatio > 1.3333333333333333)
-                || (Env.IMPL.IsKNI())) {
+        if (screenWidth != 640f || screenHeight != 480f) {
+            float scale = Math.min(screenWidth / 640f, screenHeight / 480f);
+            float ox    = (screenWidth  - 640f * scale) / 2f;
+            float oy    = (screenHeight - 480f * scale) / 2f;
             for (int i = 0; i < touchesOrClicks.size(); i++) {
                 TinyPoint touchOrClick = touchesOrClicks.get(i);
                 if (touchOrClick.X == -1) continue;
-
-                float originalX = touchOrClick.X;
-                float originalY = touchOrClick.Y;
-                float heightRatio  = 480f / screenHeight;
-                float widthRatio   = 640f / screenWidth;
-
-                DDebug.WriteLine("-----");
-                DDebug.WriteLine("originalX=" + originalX);
-                DDebug.WriteLine("originalY=" + originalY);
-                DDebug.WriteLine("heightRatio=" + heightRatio);
-                DDebug.WriteLine("widthRatio=" + widthRatio);
-                DDebug.WriteLine("widthHeightRatio=" + (screenWidth / screenHeight));
-
-                if (screenHeight > 480) {
-                    touchOrClick.X = (int)(originalX * heightRatio);
-                    touchOrClick.Y = (int)(originalY * heightRatio);
-                    touchesOrClicks.set(i, touchOrClick);
-                }
-
-                DDebug.WriteLine("new X" + touchOrClick.X);
-                DDebug.WriteLine("new Y" + touchOrClick.Y);
+                touchOrClick.X = (int)((touchOrClick.X - ox) / scale);
+                touchOrClick.Y = (int)((touchOrClick.Y - oy) / scale);
+                touchesOrClicks.set(i, touchOrClick);
             }
         }
 

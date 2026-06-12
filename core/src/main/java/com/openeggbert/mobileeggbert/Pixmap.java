@@ -38,27 +38,9 @@ public class Pixmap {
     private SpriteEffects effect = SpriteEffects.None;
 
     public TinyRect DrawBounds() {
-        TinyRect result = new TinyRect();
-        double screenWidth = graphics.GraphicsDevice().Viewport().Width();
-        double screenHeight = graphics.GraphicsDevice().Viewport().Height();
-        if (Env.PLATFORM == EnvClasses.Platform.Android && screenHeight > 480) {
-            screenWidth = screenHeight * (640.0 / 480.0);
-        }
-        if (screenWidth != 0.0 && screenHeight != 0.0) {
-            double drawWidth, drawHeight;
-            if (screenWidth / screenHeight < 1.3333333333333333) {
-                drawWidth = 640.0;
-                drawHeight = 640.0 * (screenHeight / screenWidth);
-            } else {
-                drawWidth = 480.0 * (screenWidth / screenHeight);
-                drawHeight = 480.0;
-            }
-            result.Left = 0;
-            result.Right = (int) drawWidth;
-            result.Top = 0;
-            result.Bottom = (int) drawHeight;
-        }
-        return result;
+        // SpriteBatch uses a letterboxed projection mapping game coords (0,0)-(640,480)
+        // to the screen, so the visible game area is always exactly 640×480.
+        return new TinyRect(0, 640, 0, 480);
     }
 
     public TinyPoint Origin() {
