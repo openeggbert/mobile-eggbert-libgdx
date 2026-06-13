@@ -1,0 +1,84 @@
+apply plugin: 'war'
+apply plugin: 'java'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+configurations {
+    gwt
+}
+
+dependencies {
+    implementation project(':core')
+    implementation "com.badlogicgames.gdx:gdx-backend-gwt:1.12.1"
+    implementation "com.badlogicgames.gdx:gdx:1.12.1"
+
+    gwt "com.google.gwt:gwt-dev:2.8.2"
+    gwt "com.google.gwt:gwt-user:2.8.2"
+    gwt "com.badlogicgames.gdx:gdx-backend-gwt:1.12.1"
+    gwt "com.badlogicgames.gdx:gdx-backend-gwt:1.12.1:sources"
+    gwt "com.badlogicgames.gdx:gdx:1.12.1:sources"
+    gwt "com.google.jsinterop:jsinterop-annotations:1.0.2"
+    gwt "com.google.jsinterop:jsinterop-annotations:1.0.2:sources"
+}
+
+def gwtModuleName = 'com.openeggbert.mobileeggbert.GdxDefinition'
+def gwtOut = "${buildDir}/gwt/out"
+def gwtWork = "${buildDir}/gwt/work"
+
+task compileGwt(type: JavaExec) {
+    group = 'build'
+    description = 'Compile GWT sources to JavaScript'
+
+    dependsOn project(':core').classes
+    dependsOn classes
+
+    inputs.files(project(':core').sourceSets.main.java.srcDirs)
+    inputs.files(sourceSets.main.java.srcDirs)
+    outputs.dir(gwtOut)
+
+    def srcDirs = project(':core').sourceSets.main.java.srcDirs + sourceSets.main.java.srcDirs
+
+    classpath = configurations.gwt +
+            project(':core').sourceSets.main.runtimeClasspath +
+            files(srcDirs)
+
+    mainClass = 'com.google.gwt.dev.Compiler'
+
+    args = [
+        gwtModuleName,
+        '-war', gwtOut,
+        '-workDir', gwtWork,
+        '-logLevel', 'INFO',
+        '-localWorkers', '2',
+        '-draftCompile',
+    ]
+
+    jvmArgs = ['-Xmx1G', '-Xms256M']
+}
+
+task prepareWeb(type: Sync) {
+    group = 'build'
+    description = 'Assemble deployable web directory (serve with any HTTP server)'
+    dependsOn compileGwt
+
+    def webDir = "${buildDir}/web"
+
+    // GWT compiled output (js, nocache, etc) — must be under html/ to match index.html src="html/html.nocache.js"
+    from("${gwtOut}/html") { into 'html' }
+    from('src/main/webapp') { include 'index.html'; into '' }
+
+    // Assets processed by PreloaderBundleGenerator (MD5-renamed + assets.txt manifest)
+    from('war/assets') { into 'assets' }
+
+    into webDir
+}
+
+war {
+    dependsOn compileGwt
+    from gwtOut
+    webAppDirName = 'src/main/webapp'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+build.dependsOn prepareWeb

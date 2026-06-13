@@ -1,5 +1,6 @@
 package com.openeggbert.mobileeggbert;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import Microsoft.Xna.Framework.Color;
@@ -128,7 +129,7 @@ public class Pixmap {
     public void UpdateGeometry() {
         double screenWidth = graphics.GraphicsDevice().Viewport().Width();
         double screenHeight = graphics.GraphicsDevice().Viewport().Height();
-        if (Env.PLATFORM == EnvClasses.Platform.Android && screenHeight > 480) {
+        if (Gdx.app.getType() == Application.ApplicationType.Android && screenHeight > 480) {
             screenWidth = screenHeight * (640.0 / 480.0);
         }
         double widthScale = screenWidth / 640.0;

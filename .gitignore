@@ -27,5 +27,12 @@ core/assets/backgrounds/
 core/assets/sounds/
 core/assets/worlds/
 
+# GWT PreloaderBundleGenerator output (MD5-renamed assets + manifest)
+html/war/
+
+# Runtime save files (written by LibGDX local storage during gameplay)
+desktop/SpeedyBlupi
+desktop/CurrentGame
+
 # Logs
 *.log

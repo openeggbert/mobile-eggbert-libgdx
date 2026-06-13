@@ -6,34 +6,22 @@ import System.IO.IsolatedStorage.IsolatedStorageException;
 import System.IO.IsolatedStorage.IsolatedStorageFile;
 import System.IO.IsolatedStorage.IsolatedStorageFileStream;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-
 public class Worlds {
     private static final StringBuilder output = new StringBuilder();
 
     private static final String GAME_DATA_FILENAME = "SpeedyBlupi";
     private static final String CURRENT_GAME_FILENAME = "CurrentGame";
 
-    public static String[] readWorld(int gamer, int rank) {
-        String worldFilename = String.format("worlds/world%03d.txt", rank);
-        String text = null;
+    public static String[] ReadWorld(int gamer, int rank) {
+        String worldFilename = "worlds/world" + Misc.ZeroPad(rank, 3) + ".txt";
         try {
-            InputStream stream = TitleContainer.OpenStream(worldFilename);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append('\n');
-            }
-            reader.close();
-            text = sb.toString();
+            String text = TitleContainer.GetFileHandle(worldFilename).readString("UTF-8");
+            if (text == null) return null;
+            return text.split("\n");
         } catch (Exception e) {
             System.out.println("Error loading world " + worldFilename + ": " + e.getMessage());
+            return null;
         }
-        if (text == null) return null;
-        return text.split("\n");
     }
 
     public static boolean ReadGameData(byte[] data) {
@@ -45,7 +33,7 @@ public class Worlds {
                 stream.Read(data, 0, count);
                 stream.close();
                 return true;
-            } catch (IsolatedStorageException | IOException e) {
+            } catch (IsolatedStorageException e) {
                 return false;
             }
         }
@@ -58,7 +46,7 @@ public class Worlds {
             IsolatedStorageFileStream stream = store.OpenFile(GAME_DATA_FILENAME, IsolatedStorageFileStream.FILE_MODE_CREATE);
             stream.Write(data, 0, data.length);
             stream.close();
-        } catch (IsolatedStorageException | IOException e) {
+        } catch (IsolatedStorageException e) {
             System.out.println("Error writing game data: " + e.getMessage());
         }
     }
@@ -78,8 +66,8 @@ public class Worlds {
                 byte[] bytes = new byte[(int) stream.Length()];
                 stream.Read(bytes, 0, bytes.length);
                 stream.close();
-                return new String(bytes, StandardCharsets.UTF_8);
-            } catch (IsolatedStorageException | IOException e) {
+                return new String(bytes, "UTF-8");
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -90,10 +78,10 @@ public class Worlds {
         try {
             IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication();
             IsolatedStorageFileStream stream = store.OpenFile(CURRENT_GAME_FILENAME, IsolatedStorageFileStream.FILE_MODE_CREATE);
-            byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = data.getBytes("UTF-8");
             stream.Write(bytes, 0, bytes.length);
             stream.close();
-        } catch (IsolatedStorageException | IOException e) {
+        } catch (Exception e) {
             System.out.println("Error writing current game: " + e.getMessage());
         }
     }
@@ -226,7 +214,7 @@ public class Worlds {
     }
 
     public static void WriteDoubleField(String name, double n) {
-        output.append(name).append("=").append(String.format(Locale.ROOT, "%s", n)).append(" ");
+        output.append(name).append("=").append(n).append(" ");
     }
 
     public static void WritePointField(String name, TinyPoint p) {

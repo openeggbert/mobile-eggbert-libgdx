@@ -1,5 +1,6 @@
 package com.openeggbert.mobileeggbert;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import Microsoft.Xna.Framework.Input.Touch.TouchLocation;
@@ -162,9 +163,11 @@ public class InputPad {
         padPressed = false;
         Def.ButtonGlyph buttonGlyph = Def.ButtonGlyph.None;
 
-        // ---- Touch input ----
+        // ---- Touch input (real touchscreen: Android / iOS) ----
+        // Skip on Desktop: LibGDX maps isTouched() to mouse there, which would duplicate
+        // the explicit mouse handler below and fire every click twice.
         List<TinyPoint> touchesOrClicks = new ArrayList<>();
-        if (Env.IMPL.IsNotKNI()) {
+        if (Gdx.app.getType() != Application.ApplicationType.Desktop) {
             List<TouchLocation> touches = TouchPanel.GetState();
             touchOrClickCount = touches.size();
             for (TouchLocation item : touches) {
@@ -178,7 +181,7 @@ public class InputPad {
             }
         }
 
-        // ---- Mouse input ----
+        // ---- Mouse input (Desktop) ----
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             touchOrClickCount++;
             TinyPoint mouseClick = new TinyPoint(Gdx.input.getX(), Gdx.input.getY());

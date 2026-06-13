@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+    <source path=""/>
+    <source path="Audio"/>
+    <source path="Content"/>
+    <source path="Graphics"/>
+    <source path="Input"/>
+    <source path="Input/Touch"/>
+</module>

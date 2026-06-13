@@ -416,7 +416,7 @@ import java.util.Random;
 
         public boolean LoadImages()
         {
-            String name = String.format("decor%s", String.format("%03d", m_region));
+            String name = "decor" + Misc.ZeroPad(m_region, 3);
             m_pixmap.BackgroundCache(name);
             return true;
         }
@@ -1185,7 +1185,7 @@ import java.util.Random;
                 pos.X = 0;
                 pos.Y = 438;
                 m_pixmap.HudIcon(4, 108, pos);
-                String text = String.format("= %s", Integer.toString(m_blupiPerso));
+                String text = "= " + Integer.toString(m_blupiPerso);
                 pos.X = 32;
                 pos.Y = 452;
                 Text.DrawText(m_pixmap, pos, text, 0.7);
@@ -1223,7 +1223,7 @@ import java.util.Random;
                 tinyRect.Bottom = 480;
                 TinyRect rect = tinyRect;
                 m_pixmap.DrawIcon(14, 15, rect, 0.6, false);
-                String text = String.format("%s/%s", Integer.toString(m_nbTresor), Integer.toString(m_totalTresor));
+                String text = Integer.toString(m_nbTresor) + "/" + Integer.toString(m_totalTresor);
                 pos.X = 460;
                 pos.Y = 450;
                 Text.DrawTextCenter(m_pixmap, pos, text, 1.0);
@@ -10311,7 +10311,7 @@ import java.util.Random;
         public boolean Read(int gamer, int rank, boolean bUser)
         {
             InitDecor();
-            String[] array = Worlds.readWorld(gamer, rank);
+            String[] array = Worlds.ReadWorld(gamer, rank);
             if (array == null)
             {
                 return false;

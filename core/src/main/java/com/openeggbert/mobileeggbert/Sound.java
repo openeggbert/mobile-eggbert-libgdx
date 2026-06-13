@@ -74,7 +74,7 @@ public class Sound {
     public void LoadContent() {
         if (Def.HasSound) {
             for (int i = 0; i <= 92; i++) {
-                String assetName = String.format("sounds/sound%03d", i);
+                String assetName = "sounds/sound" + Misc.ZeroPad(i, 3);
                 SoundEffect se = game1.Content.Load(SoundEffect.class, assetName);
                 soundEffects.add(se);
             }

@@ -81,4 +81,10 @@ public class Misc {
         if (rect.Left < rect.Right) return rect.Top >= rect.Bottom;
         return true;
     }
+
+    public static String ZeroPad(int n, int width) {
+        String s = Integer.toString(n);
+        while (s.length() < width) s = "0" + s;
+        return s;
+    }
 }

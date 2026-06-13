@@ -20,10 +20,13 @@ public class SoundEffectInstance {
     public void Play() {
         if (IsLooped) {
             soundId = gdxSound.loop(Volume, 1f + Pitch * 0.5f, Pan);
+            state = SoundState.Playing;
         } else {
             soundId = gdxSound.play(Volume, 1f + Pitch * 0.5f, Pan);
+            // LibGDX Sound has no completion callback — mark non-looped sounds as Stopped
+            // immediately so IsFree() returns true and channels can replay correctly.
+            state = SoundState.Stopped;
         }
-        state = SoundState.Playing;
     }
 
     public void Stop() {

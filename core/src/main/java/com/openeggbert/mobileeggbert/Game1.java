@@ -56,9 +56,6 @@ public class Game1 extends Game {
     }
 
     public Game1() {
-        if (!Env.INITIALIZED) {
-            throw new RuntimeException("Fatal error: Not initialized. Env.init() was not called.");
-        }
         missionToStart1 = -1;
         missionToStart2 = -1;
         gameData = new GameData();
@@ -409,8 +406,8 @@ public class Game1 extends Game {
             DrawTextRightButton(Def.ButtonGlyph.SetupZoom, MyResource.TX_BUTTON_SETUP_ZOOM);
             DrawTextRightButton(Def.ButtonGlyph.SetupAccel, MyResource.TX_BUTTON_SETUP_ACCEL);
             if (phase == Def.Phase.MainSetup) {
-                String text = String.format(MyResource.LoadString(MyResource.TX_BUTTON_SETUP_RESET),
-                    String.valueOf((char)(65 + gameData.SelectedGamer())));
+                String text = MyResource.LoadString(MyResource.TX_BUTTON_SETUP_RESET)
+                    .replace("%s", String.valueOf((char)(65 + gameData.SelectedGamer())));
                 DrawTextRightButton(Def.ButtonGlyph.SetupReset, text);
             }
         }
@@ -437,17 +434,17 @@ public class Game1 extends Game {
         TinyPoint pos = new TinyPoint(
             buttonRect.Right + 5 - pixmap.Origin().X,
             buttonRect.Top + 3 - pixmap.Origin().Y);
-        String text = String.format(MyResource.LoadString(MyResource.TX_GAMER_TITLE),
-            String.valueOf((char)(65 + gamer)));
+        String text = MyResource.LoadString(MyResource.TX_GAMER_TITLE)
+            .replace("%s", String.valueOf((char)(65 + gamer)));
         Text.DrawText(pixmap, pos, text, 0.7);
         pos = new TinyPoint(buttonRect.Right + 5 - pixmap.Origin().X, buttonRect.Top + 25 - pixmap.Origin().Y);
-        text = String.format(MyResource.LoadString(MyResource.TX_GAMER_MDOORS), mainDoors[0]);
+        text = MyResource.LoadString(MyResource.TX_GAMER_MDOORS).replace("%d", Integer.toString(mainDoors[0]));
         Text.DrawText(pixmap, pos, text, 0.45);
         pos = new TinyPoint(buttonRect.Right + 5 - pixmap.Origin().X, buttonRect.Top + 39 - pixmap.Origin().Y);
-        text = String.format(MyResource.LoadString(MyResource.TX_GAMER_SDOORS), secondaryDoors[0]);
+        text = MyResource.LoadString(MyResource.TX_GAMER_SDOORS).replace("%d", Integer.toString(secondaryDoors[0]));
         Text.DrawText(pixmap, pos, text, 0.45);
         pos = new TinyPoint(buttonRect.Right + 5 - pixmap.Origin().X, buttonRect.Top + 53 - pixmap.Origin().Y);
-        text = String.format(MyResource.LoadString(MyResource.TX_GAMER_LIFES), nbVies[0]);
+        text = MyResource.LoadString(MyResource.TX_GAMER_LIFES).replace("%d", Integer.toString(nbVies[0]));
         Text.DrawText(pixmap, pos, text, 0.45);
     }
 
