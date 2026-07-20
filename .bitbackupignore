@@ -1,0 +1,8 @@
+# gradle build dirs
+build/*
+core/build/*
+desktop/build/*
+html/build/*
+android/build/*
+android/app/build/*
+.gradle/*
